@@ -3,14 +3,14 @@ import { StyleSheet, Text, View, StatusBar, TouchableOpacity, TextInput } from '
 import { SafeAreaView, NavigationParams } from 'react-navigation';
 
 export interface Props {
-  navigation: NavigationParams
+    navigation: NavigationParams
 }
 
 interface State {
 
 }
 
-class LoginScreen extends React.Component<Props, State> {
+class RegisterScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
   }
@@ -21,9 +21,9 @@ class LoginScreen extends React.Component<Props, State> {
     };
   };
 
-  onLoginHandler = () => {
+  onRegisterHandler = () => {
     this.props.navigation.navigate('HomeScreen');
-  };
+  }
 
   render() {
     return (
@@ -59,7 +59,7 @@ class LoginScreen extends React.Component<Props, State> {
           </View>
           <View style={{justifyContent: 'center', marginBottom: 8}}>
             <TouchableOpacity
-              onPress={this.onLoginHandler}
+              onPress={this.onRegisterHandler}
               style={{
                 backgroundColor: '#F7F9FC',
                 borderRadius: 5,
@@ -68,10 +68,7 @@ class LoginScreen extends React.Component<Props, State> {
                 alignItems: 'center'
               }}
             >
-              <Text style={{color: '#C6CFE0', fontWeight: 'bold'}}>SIGN IN</Text>
-            </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.navigation.push('RegisterScreen')}>
-              <Text style={{color: '#C6CFE0', fontWeight: 'bold', marginTop: 10, textAlign: 'center'}}>Sign Up</Text>
+              <Text style={{color: '#C6CFE0', fontWeight: 'bold'}}>SIGN UP</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -88,4 +85,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default LoginScreen;
+export default RegisterScreen;

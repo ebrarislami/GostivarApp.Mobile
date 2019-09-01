@@ -1,9 +1,13 @@
 import React from 'react';
 import AppContainer from './src/navigation/navigation';
+import { stores } from './src/stores/index';
+import { Provider } from 'mobx-react'
 
 const App = () => {
   return (
-    <AppContainer />
+    <Provider {...stores}>
+      <AppContainer />
+    </Provider>
   );
 };
 

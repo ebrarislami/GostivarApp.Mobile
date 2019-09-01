@@ -1,15 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Button } from 'react-native';
+import { IMobxStore } from '../../stores/MobxStore';
+import { inject, observer } from 'mobx-react';
 
 export interface Props {
-
+  mobxStore?: IMobxStore;
 }
 
-interface State {
-  
-}
-
-class Home extends React.Component<Props, State> {
+class Home extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
@@ -22,21 +20,33 @@ class Home extends React.Component<Props, State> {
   };
 
   render() {
+    const { greetings } = this.props.mobxStore!;
+
     return (
-        <View style={styles.container}>
-            <Text>Home</Text>
-        </View>
+      <View style={styles.container}>
+        <Text>{greetings}</Text>
+        <Button 
+        onPress={this.clickHandler}
+        title="Learn More"
+        color="#841584"
+        accessibilityLabel="Learn more about this purple button" />
+      </View>
     );
+  }
+
+  private clickHandler = () => {
+    const { setName } = this.props.mobxStore!;
+    setName('Ebrar');
   }
 }
 
 const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-    }
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  }
 });
 
-export default Home;
+export default inject("mobxStore")(observer(Home));

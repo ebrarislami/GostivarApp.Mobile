@@ -1,8 +1,10 @@
 import React from 'react';
-import {StyleSheet, Text, View, Dimensions, Animated} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { NavigationParams } from 'react-navigation';
+import AsyncStorage from '@react-native-community/async-storage';
 
 export interface Props {
-
+  navigation: NavigationParams;
 }
 
 interface State {
@@ -14,15 +16,22 @@ class Initialization extends React.Component<Props, State> {
     super(props);
   }
 
-  componentDidMount() {
-    this.props.navigation.navigate('Home');
+  async componentDidMount() {
+    try {
+      const user = await AsyncStorage.getItem('@user')
+      if(user !== null) {
+        this.props.navigation.navigate('HomeScreen');
+      } else {
+        this.props.navigation.navigate('AuthScreen');
+      }
+    } catch(e) {
+      this.props.navigation.navigate('AuthScreen');
+    }
   }
 
   render() {
     return (
-        <View style={styles.container}>
-            <Text>0</Text>
-        </View>
+        <View style={styles.container} />
     );
   }
 }

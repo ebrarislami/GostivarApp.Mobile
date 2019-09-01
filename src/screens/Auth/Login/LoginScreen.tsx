@@ -1,27 +1,24 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { NavigationParams } from 'react-navigation';
 
 export interface Props {
-  navigation: NavigationParams;
+
 }
 
 interface State {
   
 }
 
-class Initialization extends React.Component<Props, State> {
+class LoginScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
   }
 
-  componentDidMount() {
-    
-  }
-
   render() {
     return (
-        <View style={styles.container}></View>
+        <View style={styles.container}>
+        
+        </View>
     );
   }
 }
@@ -35,4 +32,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default Initialization;
+export default LoginScreen;

@@ -1,7 +1,8 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import { IMobxStore } from '../../stores/MobxStore';
 import { inject, observer } from 'mobx-react';
+import styled from 'styled-components';
+import { IMobxStore } from '../../stores/MobxStore';
 
 export interface Props {
   mobxStore?: IMobxStore;

@@ -1,9 +1,12 @@
 import React from 'react';
 import { StyleSheet, Text, View, StatusBar, TouchableOpacity, TextInput } from 'react-native';
 import { SafeAreaView, NavigationParams } from 'react-navigation';
-
+import { inject, observer } from 'mobx-react';
+import styled from 'styled-components';
+import { ILoginStore } from '../../../stores/LoginStore';
 export interface Props {
-  navigation: NavigationParams
+  navigation: NavigationParams;
+  loginStore: ILoginStore;
 }
 
 interface State {
@@ -22,15 +25,29 @@ class LoginScreen extends React.Component<Props, State> {
   };
 
   onLoginHandler = () => {
-    this.props.navigation.navigate('HomeScreen');
+    const { login } = this.props.loginStore;
+    login();
+  };
+
+  onEmailChange = (value: string) => {
+    const { setEmail } = this.props.loginStore;
+    setEmail(value);
+  };
+
+  onPasswordChange = (value: string) => {
+    const { setPassword } = this.props.loginStore;
+    setPassword(value);
   };
 
   render() {
+    const { email, password, loading, loadingFailed, error } = this.props.loginStore;
     return (
-        <SafeAreaView style={styles.container}>
+      <SafeArea>
           <StatusBar backgroundColor="white" barStyle="dark-content" />
           <View style={{flex: 1, marginTop: 40}}>
             <TextInput
+              value={email}
+              onChangeText={(value) => this.onEmailChange(value)}
               scrollEnabled={false}
               placeholderTextColor='#8F9BB3'
               placeholder='Email' 
@@ -43,6 +60,8 @@ class LoginScreen extends React.Component<Props, State> {
               }}
             />
             <TextInput
+              value={password}
+              onChangeText={(value) => this.onPasswordChange(value)}
               scrollEnabled={false}
               placeholderTextColor='#8F9BB3'
               placeholder='Password'
@@ -56,6 +75,9 @@ class LoginScreen extends React.Component<Props, State> {
                 marginTop: 25
               }}
             />
+            {
+              loadingFailed && <Text style={{color: 'red', fontWeight: 'bold', marginTop: 10, textAlign: 'center'}}>{error}</Text>
+            }
           </View>
           <View style={{justifyContent: 'center', marginBottom: 8}}>
             <TouchableOpacity
@@ -68,24 +90,22 @@ class LoginScreen extends React.Component<Props, State> {
                 alignItems: 'center'
               }}
             >
-              <Text style={{color: '#C6CFE0', fontWeight: 'bold'}}>SIGN IN</Text>
+              <Text style={{color: '#C6CFE0', fontWeight: 'bold'}}>{loading ? 'LOADING...' : 'SIGN IN'}</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.props.navigation.push('RegisterScreen')}>
               <Text style={{color: '#C6CFE0', fontWeight: 'bold', marginTop: 10, textAlign: 'center'}}>Sign Up</Text>
             </TouchableOpacity>
           </View>
-        </SafeAreaView>
+      </SafeArea>
     );
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    justifyContent: 'center',
-    flex: 1,
-    marginVertical: 16,
-    marginHorizontal: 16
-  }
-});
+const SafeArea = styled.SafeAreaView`
+  flex: 1;
+  margin: 16px;
+  justify-content: center;
+`;
 
-export default LoginScreen;
+
+export default inject("loginStore")(observer(LoginScreen));

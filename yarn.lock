@@ -943,6 +943,14 @@
   version "15.7.1"
   resolved "https://registry.yarnpkg.com/@types/prop-types/-/prop-types-15.7.1.tgz#f1a11e7babb0c3cad68100be381d1e064c68f1f6"
 
+"@types/react-native@*":
+  version "0.60.11"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.60.11.tgz#c797f89180291c3a1d6f573f1e89644c8c17f60e"
+  integrity sha512-JAe7/UCGhnXxTwHCix1Gs6EbbCTeqU8TxxKHKNrsVtECZ9cPYp1UmJoDIDaNTz8o1/9nTFOtPj7CvHp2hWpEIQ==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/react" "*"
+
 "@types/react-native@^0.60.9":
   version "0.60.9"
   resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.60.9.tgz#89135a6ac9a71a64837e2100dc8dbc7a71b4fe34"
@@ -966,6 +974,15 @@
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-1.0.1.tgz#0a851d3bd96498fa25c33ab7278ed3bd65f06c3e"
+
+"@types/styled-components@^4.1.18":
+  version "4.1.18"
+  resolved "https://registry.yarnpkg.com/@types/styled-components/-/styled-components-4.1.18.tgz#348804fe5a399ae0a46550afaf030085815ad931"
+  integrity sha512-VrHkgvjbxQXOw0xWSUckusUUZ4y/jqN1u7kF29ngh0oE6uOrlZHleTgqeUqylQqHQIeQ8MxFb50BRHy8ju5DHg==
+  dependencies:
+    "@types/react" "*"
+    "@types/react-native" "*"
+    csstype "^2.2.0"
 
 "@types/yargs-parser@*":
   version "13.0.0"
@@ -4077,9 +4094,10 @@ mobx-react@^6.1.3:
   dependencies:
     mobx-react-lite "1.4.0"
 
-mobx@^5.13.0:
-  version "5.13.0"
-  resolved "https://registry.yarnpkg.com/mobx/-/mobx-5.13.0.tgz#0fd68f10aa5ff2d146a4ed9e145b53337cfbca59"
+mobx@4.13.0:
+  version "4.13.0"
+  resolved "https://registry.yarnpkg.com/mobx/-/mobx-4.13.0.tgz#af4be9aac596c622a2bba4bfdaa67a5adb2ed90f"
+  integrity sha512-+hJTBIBRz4sWKpBTj2t2YbjJVlFJIGYiVoHnNUl03krsiFzXGNtqLjFvTPE1+fnN6Mq6LGfvgRKiGsBtZvZBwg==
 
 morgan@^1.9.0:
   version "1.9.1"

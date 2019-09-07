@@ -1,11 +1,13 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, View, Button } from 'react-native';
 import { inject, observer } from 'mobx-react';
-import styled from 'styled-components';
-import { IMobxStore } from '../../stores/MobxStore';
+import { IAppStore } from '../../stores/AppStore';
+import { Utils } from '../../@components';
+import { NavigationParams } from 'react-navigation';
 
 export interface Props {
-  mobxStore?: IMobxStore;
+  appStore?: IAppStore;
+  navigation: NavigationParams;
 }
 
 class Home extends React.Component<Props> {
@@ -16,28 +18,25 @@ class Home extends React.Component<Props> {
   static navigationOptions = ({ navigation }) => {
     return {
       title: 'Home',
-      gesturesEnabled: false,
     };
   };
 
   render() {
-    const { greetings } = this.props.mobxStore!;
 
     return (
       <View style={styles.container}>
-        <Text>{greetings}</Text>
         <Button 
-        onPress={this.clickHandler}
-        title="Learn More"
+        onPress={this.onLogoutHandler}
+        title="Logout"
         color="#841584"
         accessibilityLabel="Learn more about this purple button" />
       </View>
     );
   }
 
-  private clickHandler = () => {
-    const { setName } = this.props.mobxStore!;
-    setName('Ebrar');
+  private onLogoutHandler = () => {
+    Utils.removeUserFromLocalStorage();
+    this.props.navigation.navigate('AuthScreen');
   }
 }
 
@@ -50,4 +49,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default inject("mobxStore")(observer(Home));
+export default inject("appStore")(observer(Home));

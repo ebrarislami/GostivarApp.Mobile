@@ -4,6 +4,7 @@ import { SafeAreaView, NavigationParams } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
 import styled from 'styled-components';
 import { ILoginStore } from '../../../stores/LoginStore';
+
 export interface Props {
   navigation: NavigationParams;
   loginStore: ILoginStore;
@@ -16,7 +17,10 @@ interface State {
 class LoginScreen extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+    this.passwordInputRef = null;
   }
+
+  passwordInputRef: TextInput | null;
 
   static navigationOptions = () => {
     return {
@@ -29,6 +33,12 @@ class LoginScreen extends React.Component<Props, State> {
     login();
   };
 
+  onSignupClickHandler = () => {
+    const { clear } = this.props.loginStore;
+    clear();
+    this.props.navigation.push('RegisterScreen')
+  }
+
   onEmailChange = (value: string) => {
     const { setEmail } = this.props.loginStore;
     setEmail(value);
@@ -38,6 +48,14 @@ class LoginScreen extends React.Component<Props, State> {
     const { setPassword } = this.props.loginStore;
     setPassword(value);
   };
+
+  onEndEmail = () => {
+    this.passwordInputRef && this.passwordInputRef.focus();
+  }
+
+  onEndPassword = () => {
+    this.onLoginHandler();
+  }
 
   render() {
     const { email, password, loading, loadingFailed, error } = this.props.loginStore;
@@ -49,30 +67,41 @@ class LoginScreen extends React.Component<Props, State> {
               value={email}
               onChangeText={(value) => this.onEmailChange(value)}
               scrollEnabled={false}
+              onSubmitEditing={this.onEndEmail}
               placeholderTextColor='#8F9BB3'
-              placeholder='Email' 
-              style={{
-                borderWidth: 1,
-                borderColor: '#8F9BB3',
-                backgroundColor: '#F7F9FC',
-                borderRadius: 5,
-                paddingLeft: 10
-              }}
-            />
-            <TextInput
-              value={password}
-              onChangeText={(value) => this.onPasswordChange(value)}
-              scrollEnabled={false}
-              placeholderTextColor='#8F9BB3'
-              placeholder='Password'
-              secureTextEntry 
+              autoCapitalize='none'
+              placeholder='Email'
+              returnKeyType='next'
+              blurOnSubmit={false}
               style={{
                 borderWidth: 1,
                 borderColor: '#8F9BB3',
                 backgroundColor: '#F7F9FC',
                 borderRadius: 5,
                 paddingLeft: 10,
-                marginTop: 25
+                paddingVertical: 15
+              }}
+            />
+            <TextInput
+              ref={(input) => { this.passwordInputRef = input; }}
+              value={password}
+              onChangeText={(value) => this.onPasswordChange(value)}
+              scrollEnabled={false}
+              placeholderTextColor='#8F9BB3'
+              autoCapitalize='none'
+              returnKeyType='go'
+              placeholder='Password'
+              onSubmitEditing={this.onEndPassword}
+              blurOnSubmit={true}
+              secureTextEntry
+              style={{
+                borderWidth: 1,
+                borderColor: '#8F9BB3',
+                backgroundColor: '#F7F9FC',
+                borderRadius: 5,
+                paddingLeft: 10,
+                marginTop: 25,
+                paddingVertical: 15
               }}
             />
             {
@@ -92,7 +121,7 @@ class LoginScreen extends React.Component<Props, State> {
             >
               <Text style={{color: '#C6CFE0', fontWeight: 'bold'}}>{loading ? 'LOADING...' : 'SIGN IN'}</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => this.props.navigation.push('RegisterScreen')}>
+            <TouchableOpacity onPress={this.onSignupClickHandler}>
               <Text style={{color: '#C6CFE0', fontWeight: 'bold', marginTop: 10, textAlign: 'center'}}>Sign Up</Text>
             </TouchableOpacity>
           </View>

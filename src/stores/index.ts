@@ -1,7 +1,9 @@
-import { MobxStore } from './MobxStore';
+import { AppStore } from './AppStore';
 import { LoginStore } from './LoginStore';
+import { RegisterStore } from './RegisterStore';
 
 export const stores = {
-    mobxStore: new MobxStore(),
-    loginStore: new LoginStore()
+    appStore: new AppStore(),
+    loginStore: new LoginStore(),
+    registerStore: new RegisterStore()
 }

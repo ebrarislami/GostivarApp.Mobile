@@ -1,5 +1,6 @@
-import { observable, action, computed } from 'mobx';
-import axios, { AxiosRequestConfig } from 'axios';
+import { observable, action } from 'mobx';
+import axios from 'axios';
+import { Utils } from '../@components';
 import navigationService from '../navigation/navigationService';
 
 export interface ILoginStore {
@@ -61,6 +62,7 @@ export class LoginStore implements ILoginStore {
             })
             this.loading = false;
             this.loadingFailed = false;
+            Utils.storeUserInLocalStorage(response.data);
             navigationService.navigate('HomeScreen', {});
             this.clear();
         } catch (err) {

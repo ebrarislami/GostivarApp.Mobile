@@ -5,6 +5,7 @@ import Initialization from '../screens/Initialization/Initialization';
 import HomeScreen from '../screens/Home/HomeScreen';
 import LoginScreen from '../screens/Auth/Login/LoginScreen';
 import RegisterScreen from '../screens/Auth/Register/RegisterScreen';
+import ForgotPasswordScreen from '../screens/Auth/ForgotPassword/ForgotPasswordScreen';
 
 const HomeStackNavigator = createStackNavigator(
   {
@@ -28,6 +29,9 @@ const AuthStackNavigator = createStackNavigator(
     },
     RegisterScreen: {
       screen: RegisterScreen,
+    },
+    ForgotPasswordScreen: {
+      screen: ForgotPasswordScreen,
     },
   },
   {

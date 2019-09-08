@@ -107,6 +107,7 @@ class LoginScreen extends React.Component<Props, State> {
             {
               loadingFailed && <Text style={{color: 'red', fontWeight: 'bold', marginTop: 10, textAlign: 'center'}}>{error}</Text>
             }
+            <Text onPress={() => this.props.navigation.push('ForgotPasswordScreen')} style={{ color: '#C6CFE0', fontWeight: 'bold', marginTop: 10, textAlign: 'center' }}>Forgot Password</Text>
           </View>
           <View style={{justifyContent: 'center', marginBottom: 8}}>
             <TouchableOpacity

@@ -1,9 +1,11 @@
-import { MobxStore } from './MobxStore';
+import { AppStore } from './AppStore';
 import { LoginStore } from './LoginStore';
+import { RegisterStore } from './RegisterStore';
 import { ForgotPasswordStore } from './ForgotPasswordStore';
 
 export const stores = {
-    mobxStore: new MobxStore(),
+    appStore: new AppStore(),
     loginStore: new LoginStore(),
+    registerStore: new RegisterStore(),
     forgotPasswordStore: new ForgotPasswordStore()
 }

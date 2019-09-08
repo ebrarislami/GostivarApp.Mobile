@@ -96,7 +96,9 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
               secureTextEntry
             />
           </InputContainer>
-          <Text style={{color: '#8F9BB3', fontWeight: 'bold', marginTop: 10, textAlign: 'right'}}>Forgot password?</Text>
+          <TouchableOpacity onPress={() => props.navigation.push('ForgotPasswordScreen')}>
+            <Text style={{color: '#8F9BB3', fontWeight: 'bold', marginTop: 10, textAlign: 'right'}}>Forgot password?</Text>
+          </TouchableOpacity>
           {
             <Text style={{ opacity: loadingFailed ? 1 : 0, color: 'red', fontWeight: 'bold', marginTop: 10, textAlign: 'center'}}>{error}</Text>
           }

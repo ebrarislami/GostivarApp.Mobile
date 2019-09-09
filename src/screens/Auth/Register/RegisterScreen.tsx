@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar, TouchableOpacity, TextInput } from 'react-native';
-import { SafeAreaView, NavigationParams } from 'react-navigation';
+import { StyleSheet, Text, View, StatusBar, TouchableOpacity, TextInput, SafeAreaView } from 'react-native';
+import { NavigationParams } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
 import { IRegisterStore } from '../../../stores/RegisterStore';
 
@@ -143,11 +143,15 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#8F9BB3',
-    backgroundColor: '#F7F9FC',
-    borderRadius: 5,
+    borderColor: 'transparent',
+    backgroundColor: 'white',
+    borderRadius: 50,
     paddingLeft: 10,
-    paddingVertical: 15
+    paddingVertical: 18,
+    shadowColor: 'rgba(0, 0, 0, .3)',
+    shadowRadius: 5,
+    shadowOpacity: 0.75,
+    shadowOffset: {height: 2, width: 0}
   },
   errTxt: {
     color: 'red',

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Text, View, StatusBar, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { NavigationParams } from 'react-navigation';
+import { NavigationParams, NavigationEventSubscription } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
 import styled from 'styled-components';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -17,7 +17,7 @@ interface State {
 
 const LoginScreen: React.SFC<Props> = (props: Props) => {
 
-  let blurListener: EventEmitterListener;
+  let blurListener: NavigationEventSubscription;
   const passwordInputRef = useRef(null);
   const [isSignClicked, setSignClicked] = useState(false);
   const { error, loading, loadingFailed, email, password } = props.loginStore;
@@ -73,7 +73,7 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: '#edf1f7' }}>
+    <Container>
       <SafeAreaView style={{ flex: 1, margin: 16, justifyContent: 'center' }}>
         <StatusBar backgroundColor="white" barStyle="dark-content" />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -139,11 +139,11 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
         </TouchableWithoutFeedback>
         <View style={{justifyContent: 'center', marginBottom: 8}}>
           <TouchableOpacity onPress={onSignupClickHandler}>
-            <Text style={{color: '#8F9BB3', fontWeight: 'bold', marginTop: 10, textAlign: 'center'}}>Don't have account? Sign Up</Text>
+            <SignUpText>Don't have account? Sign Up</SignUpText>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-    </View>
+    </Container>
   );
 };
 
@@ -152,6 +152,11 @@ LoginScreen.navigationOptions = () => {
     header: null
   }
 };
+
+const Container = styled.View`
+  flex: 1;
+  background-color: #edf1f7;
+`;
 
 const FormContainer = styled.View`
   flex: 1;
@@ -194,6 +199,13 @@ const SignButton = styled.TouchableOpacity`
   shadow-color: rgba(0, 0, 0, .3);
   shadow-offset: 0px 4px;
   margin-top: 45px;
+`;
+
+const SignUpText = styled.Text`
+  color: #8F9BB3;
+  font-weight: bold;
+  margin-top: 10;
+  text-align: center;
 `;
 
 export default inject("loginStore")(observer(LoginScreen));

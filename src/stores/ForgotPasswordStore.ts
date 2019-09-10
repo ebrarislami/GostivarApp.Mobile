@@ -6,8 +6,10 @@ export interface IForgotPasswordStore {
     email: string;
     error: string;
     loading: boolean;
+    success: boolean;
     loadingFailed: boolean;
     setEmail: (email: string) => void;
+    setSuccess: (success: boolean) => void;
     forgotPassword: () => void;
     clear: () => void;
 }
@@ -26,9 +28,17 @@ export class ForgotPasswordStore implements IForgotPasswordStore {
     @observable
     loadingFailed = false;
 
+    @observable
+    success = false;
+
     @action.bound
     setEmail(email: string): void {
         this.email = email;
+    }
+
+    @action.bound
+    setSuccess(success: boolean): void {
+        this.success = success;
     }
 
     @action.bound
@@ -50,7 +60,8 @@ export class ForgotPasswordStore implements IForgotPasswordStore {
             });
             this.loading = false;
             this.loadingFailed = false;
-            navigationService.navigate('LoginScreen', {});
+            this.success = true;
+            // navigationService.navigate('LoginScreen', {});
             this.clear();
         } catch (err) {
             const error = err.response.data;

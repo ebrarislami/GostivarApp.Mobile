@@ -43,7 +43,7 @@ const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
 
     return (
         <Container>
-            <StatusBar backgroundColor="white" barStyle="dark-content" />
+            <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
             <SafeAreaView style={{flex: 1, justifyContent: 'flex-start', margin: 16}}>
                 <TouchableOpacity onPress={() => props.navigation.goBack()}>
                     <FontAwesome5 style={{marginLeft: 8, marginTop: 10}} size={20} color='black' name={'arrow-left'} solid/>

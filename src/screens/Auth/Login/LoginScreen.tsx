@@ -1,8 +1,9 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Text, View, StatusBar, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { Text, View, StatusBar, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, Image } from 'react-native';
 import { NavigationParams, NavigationEventSubscription } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
 import styled from 'styled-components';
+import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { ILoginStore } from '../../../stores/LoginStore';
 
@@ -78,6 +79,7 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
         <StatusBar backgroundColor="white" barStyle="dark-content" />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <FormContainer>
+            <Image style={{width: 200, height: 200, alignSelf: 'center', marginBottom: 20}} source={require('../../../assets/images/logo.png')}/>
             <InputContainer>
               <IconContainer>
                 <FontAwesome5 size={14} color='#8F9BB3' name={'user'} solid/>
@@ -115,17 +117,24 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
               />
             </InputContainer>
             <TouchableOpacity onPress={() => props.navigation.push('ForgotPasswordScreen')}>
-              <Text style={{color: '#8F9BB3', fontWeight: 'bold', marginTop: 10, textAlign: 'right'}}>Forgot password?</Text>
+              <Text style={{color: '#8F9BB3', fontWeight: 'bold', marginTop: 15, textAlign: 'right'}}>Forgot password?</Text>
             </TouchableOpacity>
             {
               <Text style={{ opacity: loadingFailed ? 1 : 0, color: 'red', fontWeight: 'bold', marginTop: 10, textAlign: 'center'}}>{error}</Text>
             }
-            <SignButton
-              disabled={loading}
-              onPress={onLoginHandler}
-            >
-              <Text style={{color: 'white', fontWeight: 'bold'}}>{loading ? 'LOADING...' : 'SIGN IN'}</Text>
-            </SignButton>
+
+            <LinearGradient
+              style={{elevation: 1, shadowOpacity: 0.75, shadowRadius: 5, shadowColor: 'rgba(0, 0, 0, .3)', shadowOffset: {height: 3, width: 0},width: '100%', borderRadius: 50, borderWidth: 1, paddingVertical: 18, borderColor: 'transparent', alignItems: 'center', marginTop: 45}}
+              start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+              colors={['#41CBEA', '#2A83DB']}>
+              <TouchableOpacity
+                style={{width: '100%', alignItems: 'center'}}
+                disabled={loading}
+                onPress={onLoginHandler}
+              >
+                <Text style={{color: 'white', fontWeight: 'bold'}}>{loading ? 'LOADING...' : 'SIGN IN'}</Text>
+              </TouchableOpacity>
+            </LinearGradient>
             <Text style={{color: '#8F9BB3', fontWeight: 'bold', marginTop: 20, textAlign: 'center'}}>Or</Text>
             <View style={{marginTop: 20, alignItems: 'center', flexDirection: 'row', justifyContent: 'center',}}>
               <TouchableWithoutFeedback onPress={onGooglePressed}>
@@ -155,12 +164,12 @@ LoginScreen.navigationOptions = () => {
 
 const Container = styled.View`
   flex: 1;
-  background-color: #edf1f7;
+  background-color: #F8FAFB;
 `;
 
 const FormContainer = styled.View`
   flex: 1;
-  margin-top: 170px;
+  margin-top: 60px;
 `;
 
 const InputContainer = styled.View`
@@ -189,7 +198,7 @@ const Input = styled.TextInput`
 `;
 
 const SignButton = styled.TouchableOpacity`
-  background-color: #62B4AD;
+  background-color: #25AEE6;
   border-radius: 50px;
   width: 100%;
   padding: 18px 0px;

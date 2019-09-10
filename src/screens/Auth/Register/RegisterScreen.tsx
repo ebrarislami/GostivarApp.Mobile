@@ -42,7 +42,7 @@ const RegisterScreen: React.SFC<Props> = (props: Props) => {
   return (
     <View style={{flex: 1, backgroundColor: '#F8FAFB' }}>
       <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
+        <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
         <TouchableOpacity onPress={() => props.navigation.goBack()}>
           <FontAwesome5 style={{marginLeft: 8, marginTop: 10}} size={20} color='black' name={'arrow-left'} solid/>
         </TouchableOpacity>

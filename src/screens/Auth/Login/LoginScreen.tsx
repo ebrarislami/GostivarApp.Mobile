@@ -76,7 +76,7 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
   return (
     <Container>
       <SafeAreaView style={{ flex: 1, margin: 16, justifyContent: 'center' }}>
-        <StatusBar backgroundColor="white" barStyle="dark-content" />
+        <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <FormContainer>
             <Image style={{width: 200, height: 200, alignSelf: 'center', marginBottom: 20}} source={require('../../../assets/images/logo.png')}/>

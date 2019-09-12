@@ -43,9 +43,13 @@ const RegisterScreen: React.SFC<Props> = (props: Props) => {
     <View style={{flex: 1, backgroundColor: '#F8FAFB' }}>
       <SafeAreaView style={styles.container}>
         <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
-        <TouchableOpacity onPress={() => props.navigation.goBack()}>
-          <FontAwesome5 style={{marginLeft: 8, marginTop: 10}} size={20} color='black' name={'arrow-left'} solid/>
-        </TouchableOpacity>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, alignItems: 'center'}}>
+          <TouchableOpacity style={{flex: 0.33}} onPress={() => props.navigation.goBack()}>
+            <FontAwesome5 style={{marginLeft: 8}} size={20} color='black' name={'arrow-left'} solid/>
+          </TouchableOpacity>
+          <Text style={{fontWeight: 'bold', fontSize: 16, flex: 0.33, textAlign: 'center'}}>SIGN UP</Text>
+          <View style={{flex: 0.33}}></View>
+        </View>
         <View style={{flex: 1, marginTop: 40}}>
           <TextInput
             value={user.firstName}

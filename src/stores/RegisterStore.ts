@@ -75,7 +75,7 @@ export class RegisterStore implements IRegisterStore {
             this.loading = false;
             this.loadingFailed = false;
             Utils.storeUserInLocalStorage(response.data);
-            navigationService.navigate('HomeScreen', {});
+            navigationService.navigate('MainTabs', {});
             this.clear();
         } catch (err) {
             const error = err.response.data;

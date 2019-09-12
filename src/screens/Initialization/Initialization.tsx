@@ -20,7 +20,7 @@ class Initialization extends React.Component<Props, State> {
     try {
       const user = await AsyncStorage.getItem('@user')
       if(user !== null) {
-        this.props.navigation.navigate('HomeScreen');
+        this.props.navigation.navigate('MainTabs');
       } else {
         this.props.navigation.navigate('AuthScreen');
       }

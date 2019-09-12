@@ -1,7 +1,7 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, StatusBar, TouchableOpacity, View, TextInput, StyleSheet, SafeAreaView, Keyboard, TouchableWithoutFeedback } from "react-native";
 import { IForgotPasswordStore } from "../../../stores/ForgotPasswordStore";
-import { NavigationParams } from "react-navigation";
+import { NavigationParams, NavigationEventSubscription } from "react-navigation";
 import { inject, observer } from "mobx-react";
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
@@ -16,22 +16,39 @@ export interface Props {
 
 const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
     const { email, loading, loadingFailed, error, setEmail, forgotPassword, success, setSuccess } = props.forgotPasswordStore;
+    let blurListener: NavigationEventSubscription;
+    const [isClicked, setClicked] = useState(false);
 
+    
     useEffect(() => {
         const { success } = props.forgotPasswordStore;
         if (success) {
             onSuccessHandler();
         }
     }, [props.forgotPasswordStore.success]);
-    
 
-    const onEndEditing = () => {
+    useEffect(() => {
+        blurListener = props.navigation.addListener('willBlur', () => {
+          props.forgotPasswordStore.clear();
+          setClicked(false);
+        });
+        return () => {
+          blurListener.remove();
+        };
+    }, []);
+
+    const onForgotPasswordHandler = () => {
+        setClicked(true);
+        if (!props.forgotPasswordStore.email) return;
         props.forgotPasswordStore.forgotPassword();
     }
 
+    const onEndEditing = () => {
+        onForgotPasswordHandler();
+    }
+
     const onSuccessHandler = () => {
-        const { setSuccess, clear } = props.forgotPasswordStore;
-        clear();
+        const { setSuccess } = props.forgotPasswordStore;
         Keyboard.dismiss();
         setTimeout(() => {
             setSuccess(false);
@@ -45,9 +62,13 @@ const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
         <Container>
             <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
             <SafeAreaView style={{flex: 1, justifyContent: 'flex-start', margin: 16}}>
-                <TouchableOpacity onPress={() => props.navigation.goBack()}>
-                    <FontAwesome5 style={{marginLeft: 8, marginTop: 10}} size={20} color='black' name={'arrow-left'} solid/>
-                </TouchableOpacity>
+                <View style={{flexDirection: 'row', justifyContent: 'space-between', marginTop: 10, alignItems: 'center'}}>
+                    <TouchableOpacity style={{flex: 0.33}} onPress={() => props.navigation.goBack()}>
+                        <FontAwesome5 style={{marginLeft: 8}} size={20} color='black' name={'arrow-left'} solid/>
+                    </TouchableOpacity>
+                    <Text style={{fontWeight: 'bold', fontSize: 16, flex: 1, textAlign: 'center'}}>FORGOT PASSWORD</Text>
+                    <View style={{flex: 0.33}}></View>
+                </View>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
                     <View style={{flex: 1}}>
                         <View style={{flex: 0.4}}/>
@@ -57,6 +78,7 @@ const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
                                     <FontAwesome5 size={14} color='#8F9BB3' name={'user'} solid/>
                                 </IconContainer>
                                 <Input
+                                    autoFocus
                                     value={email}
                                     onChangeText={(value: string) => setEmail(value)}
                                     scrollEnabled={false}
@@ -66,6 +88,7 @@ const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
                                     placeholder='Email'
                                     returnKeyType='go'
                                     blurOnSubmit={false}
+                                    style={{borderColor: isClicked && !email ? 'red' : 'transparent'}}
                                 />
                             </InputContainer>
                             <LinearGradient
@@ -75,7 +98,7 @@ const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
                                 <TouchableOpacity
                                     style={{width: '100%', alignItems: 'center'}}
                                     disabled={loading}
-                                    onPress={forgotPassword}
+                                    onPress={onForgotPasswordHandler}
                                 >
                                     <Text style={{color: 'white', fontWeight: 'bold'}}>{loading ? 'LOADING...' : 'SEND'}</Text>
                                 </TouchableOpacity>

@@ -124,7 +124,7 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
             }
 
             <LinearGradient
-              style={{elevation: 1, shadowOpacity: 0.75, shadowRadius: 5, shadowColor: 'rgba(0, 0, 0, .3)', shadowOffset: {height: 3, width: 0},width: '100%', borderRadius: 50, borderWidth: 1, paddingVertical: 18, borderColor: 'transparent', alignItems: 'center', marginTop: 45}}
+              style={{width: '100%', borderRadius: 50, borderWidth: 1, paddingVertical: 18, borderColor: 'transparent', alignItems: 'center', marginTop: 45}}
               start={{x: 0, y: 0}} end={{x: 1, y: 0}}
               colors={['#41CBEA', '#2A83DB']}>
               <TouchableOpacity
@@ -138,10 +138,10 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
             <Text style={{color: '#8F9BB3', fontWeight: 'bold', marginTop: 20, textAlign: 'center'}}>Or</Text>
             <View style={{marginTop: 20, alignItems: 'center', flexDirection: 'row', justifyContent: 'center',}}>
               <TouchableWithoutFeedback onPress={onGooglePressed}>
-                <FontAwesome5 style={{marginRight: 15}} size={22} color='#8F9BB3' name={'google'} />
+                <FontAwesome5 style={{marginRight: 25}} size={22} color='#E44034' name={'google'} />
               </TouchableWithoutFeedback>
               <TouchableWithoutFeedback onPress={onFacebookPress}>
-                <FontAwesome5 size={22} color='#8F9BB3' name={'facebook'} />
+                <FontAwesome5 size={22} color='#3B5998' name={'facebook'} />
               </TouchableWithoutFeedback>
             </View>
           </FormContainer>
@@ -195,6 +195,7 @@ const Input = styled.TextInput`
   shadow-radius: 5;
   shadow-color: rgba(0, 0, 0, .2);
   shadow-offset: 0px 2px;
+  elevation: 2;
 `;
 
 const SignButton = styled.TouchableOpacity`

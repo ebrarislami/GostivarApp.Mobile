@@ -1,7 +1,7 @@
 import React from 'react';
 import { Provider } from 'mobx-react';
 import { useScreens } from 'react-native-screens';
-import AppContainer from './src/navigation/navigation.tsx';
+import AppContainer from './src/navigation/navigation';
 import { stores } from './src/stores/index';
 import navigationService from './src/navigation/navigationService';
 

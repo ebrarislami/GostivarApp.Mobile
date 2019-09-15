@@ -9,6 +9,7 @@ import LoginScreen from '../screens/Auth/Login/LoginScreen';
 import RegisterScreen from '../screens/Auth/Register/RegisterScreen';
 import ForgotPasswordScreen from '../screens/Auth/ForgotPassword/ForgotPasswordScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
+import CreateScreen from '../screens/Create/CreateScreen';
 
 const HomeStackNavigator = createStackNavigator(
   {
@@ -65,6 +66,14 @@ const AuthStackNavigator = createStackNavigator(
 
 const MainTabsNavigator = createBottomTabNavigator({
   Home: HomeStackNavigator,
+  Create: {
+    screen: () => null,
+    navigationOptions: ({ navigation }) => ({
+        tabBarOnPress: ({ navigation }) => {
+            navigation.navigate("CreateScreen");
+        }
+    }),
+  },
   Profile: ProfileStackNavigator
 }, 
 {
@@ -80,6 +89,10 @@ const MainTabsNavigator = createBottomTabNavigator({
       if (routeName === 'Profile') {
         iconName = `user`;
       }
+
+      if (routeName === 'Create') {
+        iconName = `plus`;
+      }
       // You can return any component that you like here!
       return <IconComponent name={iconName} size={25} color={tintColor} />;
     },
@@ -88,12 +101,20 @@ const MainTabsNavigator = createBottomTabNavigator({
     activeTintColor: 'tomato',  
     inactiveTintColor: 'gray',
   },
-  header: null,
+  //header: null,
 });
+
+const RootNavigation = createStackNavigator({
+  MainTabs: { screen: MainTabsNavigator, navigationOptions: { header: null }, },
+  CreateScreen: CreateScreen,
+}, {
+    mode: 'modal',
+}); 
+
 
 const AppSwitchNavigator = createSwitchNavigator({
   Initialization: { screen: Initialization },
-  MainTabs: { screen: MainTabsNavigator },
+  RootStack: { screen: RootNavigation },
   AuthScreen: { screen: AuthStackNavigator },
 });
 

@@ -63,7 +63,7 @@ export class LoginStore implements ILoginStore {
             this.loading = false;
             this.loadingFailed = false;
             Utils.storeUserInLocalStorage(response.data);
-            navigationService.navigate('MainTabs', {});
+            navigationService.navigate('RootStack', {});
             this.clear();
         } catch (err) {
             const error = err.response.data;

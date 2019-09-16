@@ -1,7 +1,10 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { NavigationParams } from 'react-navigation';
 import AsyncStorage from '@react-native-community/async-storage';
+import { Utils } from '@components';
+import compareAsc from 'date-fns/compareAsc';
+import fromUnixTime from 'date-fns/fromUnixTime';
 
 export interface Props {
   navigation: NavigationParams;
@@ -20,7 +23,15 @@ class Initialization extends React.Component<Props, State> {
     try {
       const user = await AsyncStorage.getItem('@user')
       if(user !== null) {
-        this.props.navigation.navigate('MainTabs');
+        const userJSON = JSON.parse(user);
+        const dateNow = new Date().getTime();
+        const compare = compareAsc(new Date(userJSON.expiresIn * 1000), new Date());
+        if (userJSON.accessToken && compareAsc(userJSON.expiresIn * 1000, dateNow) === 1) {
+          this.props.navigation.navigate('RootStack');
+        } else {
+          Utils.removeUserFromLocalStorage();
+          this.props.navigation.navigate('AuthScreen');
+        }
       } else {
         this.props.navigation.navigate('AuthScreen');
       }

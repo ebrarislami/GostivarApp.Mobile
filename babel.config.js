@@ -4,10 +4,12 @@ module.exports = {
     ["@babel/plugin-transform-flow-strip-types"],
     ["@babel/plugin-proposal-decorators", { "legacy": true }],
     ["@babel/plugin-proposal-class-properties", { "loose": true }],
-    ["module-resolver", {
+    ["module-resolver", 
+    {
       "root": ["./src"],
       "alias": {
         "@components": "./src/@components",
+        "@axios": "./src/@axios"
       }
     }]
   ]

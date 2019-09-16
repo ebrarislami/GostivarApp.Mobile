@@ -1,5 +1,5 @@
 import { observable, action, computed } from 'mobx';
-import axios from 'axios';
+import axios from '@axios';
 import { Utils } from '@components';
 import navigationService from '../navigation/navigationService';
 
@@ -66,7 +66,7 @@ export class RegisterStore implements IRegisterStore {
         this.loading = true;
         this.loadingFailed = false;
         try {
-            const response = await axios.post('https://dev-gostivarapp.herokuapp.com/api/auth/register', {
+            const response = await axios.post('auth/register', {
                 email: this.user.email,
                 password: this.user.password,
                 firstName: this.user.firstName,

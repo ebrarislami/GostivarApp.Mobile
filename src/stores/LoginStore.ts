@@ -1,5 +1,5 @@
 import { observable, action } from 'mobx';
-import axios from 'axios';
+import axios from '@axios';
 import { Utils } from '@components';
 import navigationService from '../navigation/navigationService';
 
@@ -56,7 +56,7 @@ export class LoginStore implements ILoginStore {
         this.loading = true;
         this.loadingFailed = false;
         try {
-            const response = await axios.post('https://dev-gostivarapp.herokuapp.com/api/auth/login', {
+            const response = await axios.post('auth/login', {
                 email: this.email,
                 password: this.password
             })

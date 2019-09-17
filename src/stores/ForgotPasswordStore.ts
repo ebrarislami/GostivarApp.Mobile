@@ -1,5 +1,5 @@
 import { observable, action, computed } from 'mobx';
-import axios, { AxiosRequestConfig } from 'axios';
+import axios from '@axios';
 import navigationService from '../navigation/navigationService';
 
 export interface IForgotPasswordStore {
@@ -55,7 +55,7 @@ export class ForgotPasswordStore implements IForgotPasswordStore {
         this.loadingFailed = false;
 
         try {
-            const response = await axios.post('https://dev-gostivarapp.herokuapp.com/api/auth/forgotpassword', {
+            const response = await axios.post('auth/forgotpassword', {
                 email: this.email
             });
             this.loading = false;

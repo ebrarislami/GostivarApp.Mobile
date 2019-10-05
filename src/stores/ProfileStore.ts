@@ -1,4 +1,4 @@
-import { observable, action, computed } from 'mobx';
+import { observable, action, computed, runInAction } from 'mobx';
 import axios from 'axios';
 import { Utils } from '@components';
 import navigationService from '../navigation/navigationService';
@@ -39,6 +39,7 @@ export interface IProfileStore {
     textInputs: UpdateProfileTextInputs;
     appLanguage: string;
     enabledNotifications: PostCategory[];
+    isAllNotificationsEnabled: boolean;
     profileDisplayType: ProfileDisplayType;
 
     error: string;
@@ -46,6 +47,7 @@ export interface IProfileStore {
     loadingFailed: boolean;
 
     toggleNotification: (notification: any) => void;
+    toggleAllNotifications: () => void;
     selectAppLanguage: (language: any) => void;
     selectProfileDisplayType: (type: ProfileDisplayType) => void;
 
@@ -69,6 +71,9 @@ export class ProfileStore implements IProfileStore {
 
     @observable
     enabledNotifications: PostCategory[] = [];
+
+    @observable
+    isAllNotificationsEnabled = false;
 
     @observable
     profileDisplayType = ProfileDisplayType.NAME_SURNAME;
@@ -118,6 +123,14 @@ export class ProfileStore implements IProfileStore {
     @action.bound
     toggleNotification(notificationIndex: number): void {
         this.enabledNotifications[notificationIndex].enabled = !this.enabledNotifications[notificationIndex].enabled
+    }
+
+    @action.bound
+    toggleAllNotifications(): void {
+        this.enabledNotifications.forEach(notification => {
+            notification.enabled = !this.isAllNotificationsEnabled;
+        });
+        this.isAllNotificationsEnabled = !this.isAllNotificationsEnabled;
     }
 
     @action.bound
@@ -187,7 +200,6 @@ export class ProfileStore implements IProfileStore {
             } else {
                 this.error = 'Unexpected error occured. Try again!';
             }
-            console.log('err', err);
 
             this.loading = false;
             this.loadingFailed = true;

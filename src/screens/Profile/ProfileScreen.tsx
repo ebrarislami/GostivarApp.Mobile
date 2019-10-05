@@ -25,7 +25,9 @@ const ProfileScreen: React.FunctionComponent<Props> = (props: Props) => {
     appLanguage,
     enabledNotifications,
     textInputs,
-    toggleNotification } = props.profileStore;
+    toggleNotification,
+    isAllNotificationsEnabled,
+    toggleAllNotifications } = props.profileStore;
 
   let nameInputRef = useRef(null);
   let surnameInputRef = useRef(null);
@@ -55,25 +57,30 @@ const ProfileScreen: React.FunctionComponent<Props> = (props: Props) => {
 
   return (
     <View style={{ flex: 1, backgroundColor: '#F8FAFB' }}>
+      <View style={{ height: 60 }} >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          horizontal={true}
+          showsHorizontalScrollIndicator={false}
+        >
+          <TouchableHighlight underlayColor='rgba(255, 255, 255, 0.0)' key={-1} style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => toggleAllNotifications}>
+            <View>
+              <Text style={[styles.notificationTag, isAllNotificationsEnabled ? styles.blueBackground : styles.redBackground]}>ALL</Text>
+            </View>
+          </TouchableHighlight>
+          {enabledNotifications.map((notification, index) => {
+            return (
+              <TouchableHighlight underlayColor='rgba(255, 255, 255, 0.0)' key={notification.id} style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => toggleNotification(index)}>
+                <View>
+                  <Text style={[styles.notificationTag, notification.enabled ? styles.blueBackground : styles.redBackground]}>{notification.name}</Text>
+                </View>
+              </TouchableHighlight>
+            )
+          })}
+        </ScrollView>
+      </View>
       <SafeAreaView style={styles.container}>
         <StatusBar backgroundColor="#FFF" barStyle="dark-content" />
-        <View style={{ height: 60 }} >
-          <ScrollView
-            contentContainerStyle={{ flexGrow: 1 }}
-            horizontal={true}
-            showsHorizontalScrollIndicator={false}
-          >
-            {enabledNotifications.map((notification, index) => {
-              return (
-                <TouchableHighlight key={notification.id} style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => toggleNotification(index)}>
-                  <View>
-                    <Text style={[styles.notificationTag, notification.enabled ? styles.blueBackground : styles.redBackground]}>{notification.name}</Text>
-                  </View>
-                </TouchableHighlight>
-              )
-            })}
-          </ScrollView>
-        </View>
         <View style={{ flex: 1, marginTop: 40 }}>
           <Picker style={[styles.picker]} selectedValue={appLanguage} onValueChange={selectAppLanguage}>
             <Picker.Item label="Turkish" value="TR-tr" />

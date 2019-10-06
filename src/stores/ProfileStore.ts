@@ -1,16 +1,16 @@
-import { observable, action, computed, runInAction } from 'mobx';
-import axios from 'axios';
+import { observable, action, computed, toJS } from 'mobx';
+import axios from '@axios';
 import { Utils } from '@components';
 import navigationService from '../navigation/navigationService';
 
 class PostCategory {
-    id: number;
+    id: string;
     name: string;
     enabled: boolean;
 
     constructor() {
         this.enabled = false;
-        this.id = -1;
+        this.id = '';
         this.name = '';
     }
 }
@@ -39,41 +39,37 @@ export interface IProfileStore {
     textInputs: UpdateProfileTextInputs;
     appLanguage: string;
     enabledNotifications: PostCategory[];
-    isAllNotificationsEnabled: boolean;
     profileDisplayType: ProfileDisplayType;
+    isAllNotificationsEnabled: boolean;
 
     error: string;
     loading: boolean;
     loadingFailed: boolean;
 
     toggleNotification: (notification: any) => void;
-    toggleAllNotifications: () => void;
+    enableAllNotifications: () => void;
     selectAppLanguage: (language: any) => void;
     selectProfileDisplayType: (type: ProfileDisplayType) => void;
 
     updateTextInputs: (key: string, value: any) => void;
     update: () => void;
     clear: () => void;
-
-    mockUserProfileData: () => void;
 }
 
 export class ProfileStore implements IProfileStore {
 
-    textInputs: UpdateProfileTextInputs = observable({
+    @observable
+    textInputs: UpdateProfileTextInputs = {
         firstName: '',
         lastName: '',
         username: ''
-    });
+    };
 
     @observable
     appLanguage = AppLanguageType.EN;
 
     @observable
     enabledNotifications: PostCategory[] = [];
-
-    @observable
-    isAllNotificationsEnabled = false;
 
     @observable
     profileDisplayType = ProfileDisplayType.NAME_SURNAME;
@@ -87,18 +83,30 @@ export class ProfileStore implements IProfileStore {
     @observable
     loadingFailed = false;
 
+    @computed
+    get isAllNotificationsEnabled(): boolean {
+        const isThereAnythingDisabled = this.enabledNotifications.filter(notification => notification.enabled === false).length;
+        return isThereAnythingDisabled ? false : true;
+    }
+
+    @computed
+    get userInputs(): any {
+        return this.textInputs;
+    }
+
+    @computed
+    get enabledPostCategories(): PostCategory[] {
+        return this.enabledNotifications;
+    }
+
     @action
     async loadProfile(): Promise<void> {
         this.loading = true;
         try {
-            const user = await Utils.getUserFromLocalStorage();
-            const headers = {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + JSON.parse(user).accessToken
-            }
-
-            const response = await axios.get('https://dev-gostivarapp.herokuapp.com/api/user/6', { headers: headers });
-            this.textInputs = response.data;
+            const response = await axios.get('https://dev-gostivarapp.herokuapp.com/api/user/6');
+            this.textInputs.firstName = response.data.firstName;
+            this.textInputs.lastName = response.data.lastName;
+            this.textInputs.username = response.data.username;
 
             console.log('res', response)
             this.loading = false;
@@ -126,11 +134,10 @@ export class ProfileStore implements IProfileStore {
     }
 
     @action.bound
-    toggleAllNotifications(): void {
+    enableAllNotifications(): void {
         this.enabledNotifications.forEach(notification => {
-            notification.enabled = !this.isAllNotificationsEnabled;
+            notification.enabled = true;
         });
-        this.isAllNotificationsEnabled = !this.isAllNotificationsEnabled;
     }
 
     @action.bound
@@ -170,35 +177,31 @@ export class ProfileStore implements IProfileStore {
         this.loading = true;
         this.loadingFailed = false;
 
-        const textInputs: UpdateProfileTextInputs = {
-            firstName: this.textInputs.firstName,
-            lastName: this.textInputs.lastName,
-            username: this.textInputs.username
+        const textInputs: UpdateProfileTextInputs = toJS(this.userInputs);
+        const preferences = {
+            language: this.appLanguage,
+            displayAs: this.profileDisplayType
         }
+        const enabledNotifications: PostCategory[] = toJS(this.enabledPostCategories);
+
 
         try {
-            const user = await Utils.getUserFromLocalStorage();
-            const headers = {
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + user.accessToken
+            const updateObject = {
+                textInputs,
+                preferences,
+                enabledNotifications
             }
-            console.log('user la ', textInputs)
-            const response = await axios.put('https://dev-gostivarapp.herokuapp.com/api/user/',
-                textInputs, { headers: headers });
-
-            console.log('user', user);
-            console.log('res update', response)
+            console.log('update object ', updateObject)
             this.loading = false;
             this.loadingFailed = false;
 
             navigationService.navigate('MainTabs', {});
-            // this.clear();
         } catch (err) {
             const error = err.response.data;
             if (error && error.err) {
                 this.error = error.err;
             } else {
-                this.error = 'Unexpected error occured. Try again!';
+                this.error = 'Unexpected error occurred. Try again!';
             }
 
             this.loading = false;
@@ -208,45 +211,45 @@ export class ProfileStore implements IProfileStore {
     }
 
     @action
-    mockUserProfileData() {
+    private mockUserProfileData() {
         this.appLanguage = AppLanguageType.EN;
-        const mockNotifications = [
+        const mockNotifications: PostCategory[] = [
             {
-                id: 1,
+                id: 'aaa',
                 name: 'News',
-                enabled: true
+                enabled: false
             },
             {
-                id: 2,
+                id: 'bbb',
                 name: 'Death',
                 enabled: true
             },
             {
-                id: 3,
+                id: 'ccc',
                 name: 'Hot Deals',
                 enabled: true
             },
             {
-                id: 4,
+                id: 'ddd',
                 name: 'Municipality Announcement',
                 enabled: true
             },
             {
-                id: 5,
+                id: 'fff',
                 name: 'Career',
                 enabled: true
             },
             {
-                id: 6,
+                id: 'eee',
                 name: 'Real Estate',
                 enabled: true
             },
             {
-                id: 7,
+                id: 'zzz',
                 name: 'Forbidden',
-                enabled: false
+                enabled: true
             }
-        ] as any;
+        ];
 
         this.enabledNotifications = mockNotifications;
         this.profileDisplayType = ProfileDisplayType.NAME_SURNAME;

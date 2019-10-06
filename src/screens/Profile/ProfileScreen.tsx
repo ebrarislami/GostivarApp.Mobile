@@ -4,6 +4,7 @@ import { inject, observer } from 'mobx-react';
 import { NavigationParams, SafeAreaView, ScrollView } from 'react-navigation';
 import { IProfileStore } from '../../stores/ProfileStore';
 import LinearGradient from 'react-native-linear-gradient';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 export interface Props {
   navigation: NavigationParams;
@@ -26,8 +27,8 @@ const ProfileScreen: React.FunctionComponent<Props> = (props: Props) => {
     enabledNotifications,
     textInputs,
     toggleNotification,
-    isAllNotificationsEnabled,
-    toggleAllNotifications } = props.profileStore;
+    enableAllNotifications,
+    isAllNotificationsEnabled } = props.profileStore;
 
   let nameInputRef = useRef(null);
   let surnameInputRef = useRef(null);
@@ -55,24 +56,28 @@ const ProfileScreen: React.FunctionComponent<Props> = (props: Props) => {
     props.profileStore.loadProfile();
   }, []);
 
+  const selectAllView = (
+    <TouchableHighlight underlayColor='rgba(255, 255, 255, 0.0)' key={'ALL'} style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => enableAllNotifications()}>
+      <View>
+        <FontAwesome5 style={{ marginLeft: 8, marginRight: 8 }} size={20} color='green' name={'check-circle'} solid />
+      </View>
+    </TouchableHighlight>
+  );
+
   return (
-    <View style={{ flex: 1, backgroundColor: '#F8FAFB' }}>
-      <View style={{ height: 60 }} >
+    <ScrollView style={{ flex: 1, backgroundColor: '#F8FAFB' }}>
+      <View style={{ height: 60, marginTop: 20 }} >
         <ScrollView
           contentContainerStyle={{ flexGrow: 1 }}
           horizontal={true}
           showsHorizontalScrollIndicator={false}
         >
-          <TouchableHighlight underlayColor='rgba(255, 255, 255, 0.0)' key={-1} style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => toggleAllNotifications}>
-            <View>
-              <Text style={[styles.notificationTag, isAllNotificationsEnabled ? styles.blueBackground : styles.redBackground]}>ALL</Text>
-            </View>
-          </TouchableHighlight>
+          {isAllNotificationsEnabled ? null : selectAllView}
           {enabledNotifications.map((notification, index) => {
             return (
-              <TouchableHighlight underlayColor='rgba(255, 255, 255, 0.0)' key={notification.id} style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => toggleNotification(index)}>
+              <TouchableHighlight underlayColor='rgba(255, 255, 255, 0.0)' key={notification.id} style={{ alignItems: 'center', justifyContent: 'center', margin: 2 }} onPress={() => toggleNotification(index)}>
                 <View>
-                  <Text style={[styles.notificationTag, notification.enabled ? styles.blueBackground : styles.redBackground]}>{notification.name}</Text>
+                  <Text style={[styles.notificationTag, notification.enabled ? styles.blueBackground : styles.disabledStyle]}>{notification.name}</Text>
                 </View>
               </TouchableHighlight>
             )
@@ -81,7 +86,8 @@ const ProfileScreen: React.FunctionComponent<Props> = (props: Props) => {
       </View>
       <SafeAreaView style={styles.container}>
         <StatusBar backgroundColor="#FFF" barStyle="dark-content" />
-        <View style={{ flex: 1, marginTop: 40 }}>
+        <View style={{ flex: 1 }}>
+          <Text>App language: </Text>
           <Picker style={[styles.picker]} selectedValue={appLanguage} onValueChange={selectAppLanguage}>
             <Picker.Item label="Turkish" value="TR-tr" />
             <Picker.Item label="English" value="EN-us" />
@@ -146,7 +152,7 @@ const ProfileScreen: React.FunctionComponent<Props> = (props: Props) => {
           </LinearGradient>
         </View>
       </SafeAreaView>
-    </View>
+    </ScrollView>
   )
 }
 
@@ -160,7 +166,8 @@ const styles = StyleSheet.create({
   container: {
     justifyContent: 'center',
     flex: 1,
-    margin: 16,
+    marginLeft: 16,
+    marginRight: 16
   },
   signBtn: {
     backgroundColor: '#F7F9FC',
@@ -209,8 +216,11 @@ const styles = StyleSheet.create({
   blueBackground: {
     backgroundColor: 'blue',
   },
-  redBackground: {
-    backgroundColor: 'red'
+  disabledStyle: {
+    borderColor: 'blue',
+    borderWidth: 1,
+    backgroundColor: 'transparent',
+    color: 'blue'
   }
 });
 

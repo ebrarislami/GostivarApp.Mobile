@@ -38,7 +38,6 @@ const RegisterScreen: React.SFC<Props> = (props: Props) => {
   const onFocusNextInput = (ref: any) => {
     ref && ref.current.focus();
   }
-
   return (
     <View style={{flex: 1, backgroundColor: '#F8FAFB' }}>
       <SafeAreaView style={styles.container}>

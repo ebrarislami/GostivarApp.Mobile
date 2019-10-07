@@ -49,6 +49,7 @@ const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
 
     const onSuccessHandler = () => {
         const { setSuccess } = props.forgotPasswordStore;
+        setClicked(false);
         Keyboard.dismiss();
         setTimeout(() => {
             setSuccess(false);

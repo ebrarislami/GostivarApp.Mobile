@@ -1,4 +1,5 @@
 import React from 'react';
+import 'react-native-gesture-handler'
 import { Provider } from 'mobx-react';
 import { useScreens } from 'react-native-screens';
 import AppContainer from './src/navigation/navigation';

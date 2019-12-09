@@ -10,6 +10,7 @@ import RegisterScreen from '../screens/Auth/Register/RegisterScreen';
 import ForgotPasswordScreen from '../screens/Auth/ForgotPassword/ForgotPasswordScreen';
 import ProfileScreen from '../screens/Profile/ProfileScreen';
 import CreateScreen from '../screens/Create/CreateScreen';
+import { View, TouchableHighlight } from 'react-native';
 
 const HomeStackNavigator = createStackNavigator(
   {
@@ -69,9 +70,33 @@ const MainTabsNavigator = createBottomTabNavigator({
   Create: {
     screen: () => null,
     navigationOptions: ({ navigation }) => ({
-        tabBarOnPress: ({ navigation }) => {
-            navigation.navigate("CreateScreen");
-        }
+        // tabBarOnPress: ({ navigation }) => {
+        //   navigation.navigate("CreateScreen");
+        // },
+        tabBarIcon: (
+          <View style={{
+            position: 'absolute',
+            alignItems: 'center',
+            top: -25
+        }}>
+            <TouchableHighlight
+              onPress={() => navigation.navigate("CreateScreen")}
+              underlayColor="#ff8e7a"
+              style={{
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: 70,
+                  height: 70,
+                  borderRadius: 70 / 2,
+                  backgroundColor: 'tomato'
+              }}
+            >
+                <View>
+                  <FontAwesome5 name="plus" size={25} color="#F8F8F8" />
+                </View>
+            </TouchableHighlight>
+        </View>
+        )
     }),
   },
   Profile: ProfileStackNavigator
@@ -100,6 +125,7 @@ const MainTabsNavigator = createBottomTabNavigator({
   tabBarOptions: {
     activeTintColor: 'tomato',  
     inactiveTintColor: 'gray',
+    showLabel: false
   },
   //header: null,
 });

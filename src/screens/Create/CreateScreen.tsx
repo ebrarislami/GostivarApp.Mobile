@@ -1,13 +1,15 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Switch } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Switch, Image } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { NavigationParams, SafeAreaView } from 'react-navigation';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
+import RNPickerSelect from 'react-native-picker-select';
+import ImagePicker from 'react-native-image-picker';
 import { ICreateStore } from '../../stores/CreateStore';
 
 export interface Props {
-  createStore?: ICreateStore;
+  createStore: ICreateStore;
   navigation: NavigationParams;
 }
 
@@ -17,7 +19,9 @@ class CreateScreen extends React.Component<Props> {
   }
 
   state = {
-    commenstEnabled: false
+    commenstEnabled: true,
+    category: null,
+    images: [],
   };
 
   static navigationOptions = ({ navigation }) => {
@@ -32,8 +36,63 @@ class CreateScreen extends React.Component<Props> {
     };
   };
 
+  componentDidMount() {
+    this.props.createStore?.loadCategories();
+  }
+
   onSubmitHandler = () => {
 
+  }
+
+  onRemoveImage = (id: string) => {
+    const index = this.state.images.findIndex(image => image.id === id);
+    if (index !== -1) {
+      this.setState((prevState) => ({
+        images: [
+          ...prevState.images.slice(0, index),
+          ...prevState.images.slice(index + 1)
+        ]
+      }));
+    }
+  }
+
+  onImagePickerOpen = () => {
+    const imagesLength = this.state.images.length;
+    if (imagesLength >= 10) return;
+    const options = {
+      title: 'Select Image',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    ImagePicker.showImagePicker(options, (response: any) => {    
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.error) {
+        console.log('ImagePicker Error: ', response.error);
+      } else if (response.customButton) {
+        console.log('User tapped custom button: ', response.customButton);
+      } else {
+        const source = { uri: response.uri };
+        this.onAddImage(source);
+      }
+    });
+  }
+
+  onAddImage = (source: any) => {
+    const id = `${Math.random().toString(36).substr(2, 9)}`;
+    const image = {
+      ...source,
+      id
+    };
+    this.setState((prevState) => ({
+      images: [
+        ...prevState.images,
+        {...image}
+      ]
+    }));
   }
 
   onCommentsHandler = () => {
@@ -42,9 +101,52 @@ class CreateScreen extends React.Component<Props> {
     }));
   }
 
+  onCategoryHandler = (category: number) => {
+    this.setState({
+      category
+    });
+  }
+
   render() {
+    const { images } = this.state;
+    const { createStore } = this.props;
+    const { categories } = createStore;
+
     return (
       <SafeAreaView style={styles.container}>
+
+        <View style={styles.imagesContainer}>
+          {
+            images.map((image: any) => {
+              return (
+                <TouchableOpacity key={image.id}>
+                  <View style={styles.imageView}>
+                    <TouchableOpacity style={styles.removeImage} onPress={() => this.onRemoveImage(image.id)}>
+                      <FontAwesome5 name={'times'} size={16} color={'white'} />
+                    </TouchableOpacity>
+                    <Image style={styles.image} source={{uri: image.uri}} />
+                  </View>
+                </TouchableOpacity>
+              )
+            })
+          }
+          <TouchableOpacity onPress={this.onImagePickerOpen}>
+            <View style={styles.imageView}>
+              <FontAwesome5 name={'plus'} size={25} color={'lightgray'} />
+            </View>
+          </TouchableOpacity>
+        </View>
+
+        <View style={styles.picker}>
+          <RNPickerSelect
+            placeholder={{
+              label: 'Select a category',
+              value: null,
+            }}
+              onValueChange={this.onCategoryHandler}
+              items={[...categories]}
+          />
+        </View>
 
         <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 18}}>
           <Text style={{marginRight: 15}}>Comments Enabled</Text>
@@ -64,7 +166,7 @@ class CreateScreen extends React.Component<Props> {
             style={{width: '100%', alignItems: 'center'}}
             onPress={this.onSubmitHandler}
           >
-            <Text style={{color: 'white', fontWeight: 'bold'}}>Publish</Text>
+            <Text style={{color: 'white', fontWeight: 'bold'}}>PUBLISH</Text>
           </TouchableOpacity>
         </LinearGradient>
       </SafeAreaView>
@@ -78,6 +180,58 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 18,
     flex: 1,
+  },
+  picker: {
+    width: '100%',
+    fontSize: 16,
+    paddingVertical: 12,
+    paddingHorizontal: 10,
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    borderRadius: 4,
+    marginBottom: 18,
+    color: 'black',
+    paddingRight: 30, // to ensure the text is never behind the icon
+  },
+  imagesContainer: {
+    position: 'relative',
+    flexDirection: 'row',
+    marginBottom: 18,
+    justifyContent: 'flex-start',
+    width: '100%',
+    flexWrap: 'wrap'
+  },
+  imageView: {
+    width: 84,
+    height: 84,
+    borderWidth: 1,
+    borderColor: 'lightgray',
+    borderRadius: 4,
+    borderStyle: 'dashed',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 6,
+    marginRight: 16
+  },
+  image: {
+    width: 84,
+    height: 84,
+    resizeMode: 'cover',
+    borderWidth: 1,
+    borderColor: 'transparent',
+    borderRadius: 4,
+  },
+  removeImage: {
+    position: 'absolute',
+    width: 24,
+    height: 24,
+    borderRadius: 100,
+    backgroundColor: '#41CBEA',
+    right: -14,
+    top: -10,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 100
   }
 });
 

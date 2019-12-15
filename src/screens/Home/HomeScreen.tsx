@@ -22,7 +22,6 @@ class Home extends React.Component<Props> {
   };
 
   render() {
-
     return (
       <View style={styles.container}>
         <Button 

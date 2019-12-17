@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Text, View, StatusBar, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, Image } from 'react-native';
-import { NavigationParams, NavigationEventSubscription } from 'react-navigation';
+import { Text, View, StatusBar, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Image } from 'react-native';
+import { NavigationParams, NavigationEventSubscription, SafeAreaView } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
 import styled from 'styled-components';
 import LinearGradient from 'react-native-linear-gradient';

@@ -7,17 +7,38 @@ interface Category {
     label: string;
 };
 
+export interface CreatePost {
+    isCommentsEnabled: boolean;
+    content: string;
+    categoryId: number;
+    images: string[];
+}
+
 export interface ICreateStore {
     categoriesLoading: boolean;
     categoriesLoadingFailed: boolean;
     categories: Category[];
+    createPost: CreatePost;
     loadCategories: () => void;
+    updateCreatePost: (key: string, value: any) => void;
 }
 
 export class CreateStore implements ICreateStore {
     @observable categoriesLoading = false;
     @observable categoriesLoadingFailed = false;
     @observable categories = [];
+
+    createPost: CreatePost = observable({
+        isCommentsEnabled: true,
+        content: '',
+        categoryId: 0,
+        images: []
+    });
+
+    @action
+    updateCreatePost = (key: string, value: any): void => {
+        this.createPost[key] = value;
+    }
 
     @action.bound
     loadCategories = async (): Promise<void> => {

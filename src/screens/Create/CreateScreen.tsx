@@ -19,8 +19,6 @@ class CreateScreen extends React.Component<Props> {
   }
 
   state = {
-    commenstEnabled: true,
-    category: null,
     images: [],
   };
 
@@ -37,7 +35,7 @@ class CreateScreen extends React.Component<Props> {
   };
 
   componentDidMount() {
-    this.props.createStore?.loadCategories();
+    this.props.createStore.loadCategories();
   }
 
   onSubmitHandler = () => {
@@ -96,70 +94,72 @@ class CreateScreen extends React.Component<Props> {
   }
 
   onCommentsHandler = () => {
-    this.setState((prevState) => ({
-      commenstEnabled: !prevState.commenstEnabled
-    }));
+    const isCommentsEnabled = !this.props.createStore.createPost.isCommentsEnabled;
+    this.props.createStore.updateCreatePost('isCommentsEnabled', isCommentsEnabled);
   }
 
   onCategoryHandler = (category: number) => {
-    this.setState({
-      category
-    });
+    this.props.createStore.updateCreatePost('categoryId', category);
   }
 
   render() {
     const { images } = this.state;
     const { createStore } = this.props;
-    const { categories } = createStore;
+    const { categories, createPost } = createStore;
 
     return (
       <SafeAreaView style={styles.container}>
 
-        <View style={styles.imagesContainer}>
-          {
-            images.map((image: any) => {
-              return (
-                <TouchableOpacity key={image.id}>
-                  <View style={styles.imageView}>
-                    <TouchableOpacity style={styles.removeImage} onPress={() => this.onRemoveImage(image.id)}>
-                      <FontAwesome5 name={'times'} size={16} color={'white'} />
-                    </TouchableOpacity>
-                    <Image style={styles.image} source={{uri: image.uri}} />
-                  </View>
-                </TouchableOpacity>
-              )
-            })
-          }
-          <TouchableOpacity onPress={this.onImagePickerOpen}>
-            <View style={styles.imageView}>
-              <FontAwesome5 name={'plus'} size={25} color={'lightgray'} />
-            </View>
-          </TouchableOpacity>
-        </View>
+        <View style={styles.content}>
+          <View style={styles.imagesContainer}>
+            {
+              images.map((image: any) => {
+                return (
+                  <TouchableOpacity key={image.id}>
+                    <View style={styles.imageView}>
+                      <TouchableOpacity style={styles.removeImage} onPress={() => this.onRemoveImage(image.id)}>
+                        <FontAwesome5 name={'times'} size={16} color={'white'} />
+                      </TouchableOpacity>
+                      <Image style={styles.image} source={{uri: image.uri}} />
+                    </View>
+                  </TouchableOpacity>
+                )
+              })
+            }
+            <TouchableOpacity onPress={this.onImagePickerOpen}>
+              <View style={styles.imageView}>
+                <FontAwesome5 name={'plus'} size={25} color={'lightgray'} />
+              </View>
+            </TouchableOpacity>
+          </View>
 
-        <View style={styles.picker}>
-          <RNPickerSelect
-            placeholder={{
-              label: 'Select a category',
-              value: null,
-            }}
-              onValueChange={this.onCategoryHandler}
-              items={[...categories]}
-          />
-        </View>
-
-        <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 18}}>
-          <Text style={{marginRight: 15}}>Comments Enabled</Text>
-          <Switch
-              ios_backgroundColor="#FFFFFF"
-              trackColor={{ false: '#E5E5E5', true: '#41CBEA' }}
-              onValueChange={this.onCommentsHandler}
-              value={this.state.commenstEnabled}
+          <View style={styles.picker}>
+            <RNPickerSelect
+              placeholder={{
+                label: 'Select a category',
+                value: null,
+              }}
+                onValueChange={this.onCategoryHandler}
+                items={[...categories]}
             />
+            <TouchableOpacity style={{position: 'absolute', right: 14, top: 14}} onPress={this.onImagePickerOpen}>
+              <FontAwesome5 name={'arrow-down'} size={14} color={'black'} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 18}}>
+            <Text style={{marginRight: 15}}>Comments Enabled</Text>
+            <Switch
+                ios_backgroundColor="#FFFFFF"
+                trackColor={{ false: '#E5E5E5', true: '#41CBEA' }}
+                onValueChange={this.onCommentsHandler}
+                value={createPost.isCommentsEnabled}
+              />
+          </View>
         </View>
 
         <LinearGradient
-          style={{width: '100%', borderRadius: 50, borderWidth: 1, paddingVertical: 18, borderColor: 'transparent', alignItems: 'center'}}
+          style={{width: '100%', borderRadius: 50, borderWidth: 1, paddingVertical: 18, borderColor: 'transparent'}}
           start={{x: 0, y: 0}} end={{x: 1, y: 0}}
           colors={['#41CBEA', '#2A83DB']}>
           <TouchableOpacity
@@ -178,8 +178,13 @@ const styles = StyleSheet.create({
   container: {
     display: 'flex',
     alignItems: 'center',
+    justifyContent: 'space-between',
     padding: 18,
     flex: 1,
+  },
+  content: {
+    alignItems: 'center',
+    width: '100%',
   },
   picker: {
     width: '100%',
@@ -187,10 +192,16 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 10,
     borderWidth: 1,
-    borderColor: 'lightgray',
-    borderRadius: 4,
+    borderColor: 'white',
+    borderRadius: 10,
     marginBottom: 18,
     color: 'black',
+    backgroundColor: 'white',
+    shadowOpacity: 0.75,
+    shadowRadius: 7,
+    shadowColor: 'rgba(0, 0, 0, .2)',
+    shadowOffset:{  width: 2,  height: 1,  },
+    elevation: 2,
     paddingRight: 30, // to ensure the text is never behind the icon
   },
   imagesContainer: {
@@ -210,7 +221,7 @@ const styles = StyleSheet.create({
     borderStyle: 'dashed',
     alignItems: 'center',
     justifyContent: 'center',
-    marginVertical: 6,
+    marginBottom: 6,
     marginRight: 16
   },
   image: {

@@ -77,7 +77,7 @@ const MainTabsNavigator = createBottomTabNavigator({
           <View style={{
             position: 'absolute',
             alignItems: 'center',
-            top: -25
+            top: -35
         }}>
             <TouchableHighlight
               onPress={() => navigation.navigate("CreateScreen")}
@@ -135,6 +135,10 @@ const RootNavigation = createStackNavigator({
   CreateScreen: CreateScreen,
 }, {
     mode: 'modal',
+    defaultNavigationOptions: {
+      gestureEnabled: true,
+      cardOverlayEnabled: true,
+    },
 }); 
 
 

@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Switch, Image } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Switch, Image, TextInput } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { NavigationParams, SafeAreaView } from 'react-navigation';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -13,6 +13,10 @@ export interface Props {
   navigation: NavigationParams;
 }
 
+const MIN_FONT_SIZE = 10;
+const MAX_FONT_SIZE = 24;
+const INCREMENT = 2;
+
 class CreateScreen extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
@@ -20,6 +24,7 @@ class CreateScreen extends React.Component<Props> {
 
   state = {
     images: [],
+    fontSize: MAX_FONT_SIZE,
   };
 
   static navigationOptions = ({ navigation }) => {
@@ -36,6 +41,10 @@ class CreateScreen extends React.Component<Props> {
 
   componentDidMount() {
     this.props.createStore.loadCategories();
+  }
+
+  componentWillUnmount() {
+    this.props.createStore.resetCreatePost();
   }
 
   onSubmitHandler = () => {
@@ -96,14 +105,45 @@ class CreateScreen extends React.Component<Props> {
   onCommentsHandler = () => {
     const isCommentsEnabled = !this.props.createStore.createPost.isCommentsEnabled;
     this.props.createStore.updateCreatePost('isCommentsEnabled', isCommentsEnabled);
-  }
+  };
 
   onCategoryHandler = (category: number) => {
     this.props.createStore.updateCreatePost('categoryId', category);
-  }
+  };
+
+  onContentChangeHandler = (value: string) => {
+    this.props.createStore.updateCreatePost('content', value);
+
+    if (value.length < 10) {
+      this.setState({fontSize: MAX_FONT_SIZE})
+    }
+    if (value > 10) {
+      this.setState({fontSize: 22})
+    }
+
+    if (value.length > 20) {
+      this.setState({fontSize: 20})
+    }
+
+    if (value.length > 30) {
+      this.setState({fontSize: 18})
+    }
+
+    if (value.length > 40) {
+      this.setState({fontSize: 16})
+    }
+
+    if (value.length > 50) {
+      this.setState({fontSize: 14})
+    }
+
+    if (value.length > 60) {
+      this.setState({fontSize: 12})
+    }
+  };
 
   render() {
-    const { images } = this.state;
+    const { images, fontSize } = this.state;
     const { createStore } = this.props;
     const { categories, createPost } = createStore;
 
@@ -111,6 +151,22 @@ class CreateScreen extends React.Component<Props> {
       <SafeAreaView style={styles.container}>
 
         <View style={styles.content}>
+
+          <View style={styles.textareaView}>
+            <TextInput
+              onChangeText={this.onContentChangeHandler}
+              autoCompleteType={'off'}
+              value={createPost.content}
+              autoCorrect={false}
+              multiline
+              blurOnSubmit
+              returnKeyType="done"
+              allowFontScaling
+              maxLength={100}
+              style={[styles.textareaInput, {fontSize}]}
+              placeholder="Enter your text here"/>
+          </View>
+
           <View style={styles.imagesContainer}>
             {
               images.map((image: any) => {
@@ -158,17 +214,19 @@ class CreateScreen extends React.Component<Props> {
           </View>
         </View>
 
+      <View style={{width: '100%'}}>
         <LinearGradient
           style={{width: '100%', borderRadius: 50, borderWidth: 1, paddingVertical: 18, borderColor: 'transparent'}}
           start={{x: 0, y: 0}} end={{x: 1, y: 0}}
           colors={['#41CBEA', '#2A83DB']}>
           <TouchableOpacity
-            style={{width: '100%', alignItems: 'center'}}
+            style={{alignItems: 'center'}}
             onPress={this.onSubmitHandler}
           >
             <Text style={{color: 'white', fontWeight: 'bold'}}>PUBLISH</Text>
           </TouchableOpacity>
         </LinearGradient>
+      </View>
       </SafeAreaView>
     );
   }
@@ -179,12 +237,36 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: 18,
+    padding: 24,
     flex: 1,
   },
   content: {
     alignItems: 'center',
+    flex: 1,
     width: '100%',
+  },
+  textareaView: {
+    width: '100%',
+    fontSize: 16,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
+    borderRadius: 10,
+    marginBottom: 22,
+    color: 'black',
+    backgroundColor: 'white',
+    shadowOpacity: 0.75,
+    shadowRadius: 7,
+    shadowColor: 'rgba(0, 0, 0, .2)',
+    shadowOffset:{  width: 2,  height: 1 },
+    elevation: 2,
+    minHeight: 120,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  textareaInput: {
+    fontSize: 18,
+    width: '100%',
+    textAlign: 'center',
   },
   picker: {
     width: '100%',
@@ -200,9 +282,9 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.75,
     shadowRadius: 7,
     shadowColor: 'rgba(0, 0, 0, .2)',
-    shadowOffset:{  width: 2,  height: 1,  },
+    shadowOffset:{  width: 2,  height: 1 },
     elevation: 2,
-    paddingRight: 30, // to ensure the text is never behind the icon
+    paddingRight: 30,
   },
   imagesContainer: {
     position: 'relative',

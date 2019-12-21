@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { Text, View, StatusBar, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Image } from 'react-native';
+import { Text, View, StatusBar, TouchableOpacity, TouchableWithoutFeedback, Keyboard, Image, Dimensions } from 'react-native';
 import { NavigationParams, NavigationEventSubscription, SafeAreaView } from 'react-navigation';
 import { inject, observer } from 'mobx-react';
 import styled from 'styled-components';
@@ -73,9 +73,10 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
 
   }
 
+  const {height, width} = Dimensions.get('window');
+
   return (
-    <Container>
-      <SafeAreaView style={{ flex: 1, margin: 16, justifyContent: 'center' }}>
+      <SafeAreaView style={{ flex: 1, paddingHorizontal: 16, paddingBottom: 16, justifyContent: 'center', backgroundColor: "#F8FAFB" }}>
         <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <FormContainer>
@@ -122,9 +123,9 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
             {
               <Text style={{ opacity: loadingFailed ? 1 : 0, color: 'red', fontWeight: 'bold', marginTop: 10, textAlign: 'center'}}>{error}</Text>
             }
-
+            <View style={{marginTop: 25}}>
             <LinearGradient
-              style={{width: '100%', borderRadius: 50, borderWidth: 1, paddingVertical: 18, borderColor: 'transparent', alignItems: 'center', marginTop: 45}}
+              style={{width: '100%', borderRadius: 50, borderWidth: 1, paddingVertical: 18, borderColor: 'transparent', alignItems: 'center'}}
               start={{x: 0, y: 0}} end={{x: 1, y: 0}}
               colors={['#41CBEA', '#2A83DB']}>
               <TouchableOpacity
@@ -135,8 +136,9 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
                 <Text style={{color: 'white', fontWeight: 'bold'}}>{loading ? 'LOADING...' : 'SIGN IN'}</Text>
               </TouchableOpacity>
             </LinearGradient>
-            <Text style={{color: '#8F9BB3', fontWeight: 'bold', marginTop: 20, textAlign: 'center'}}>Or</Text>
-            <View style={{marginTop: 20, alignItems: 'center', flexDirection: 'row', justifyContent: 'center',}}>
+            </View>
+            <Text style={{color: '#8F9BB3', fontWeight: 'bold', marginVertical: '4%', textAlign: 'center'}}>Or</Text>
+            <View style={{alignItems: 'center', flexDirection: 'row', justifyContent: 'center',}}>
               <TouchableWithoutFeedback onPress={onGooglePressed}>
                 <FontAwesome5 style={{marginRight: 25}} size={22} color='#E44034' name={'google'} />
               </TouchableWithoutFeedback>
@@ -146,13 +148,12 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
             </View>
           </FormContainer>
         </TouchableWithoutFeedback>
-        <View style={{justifyContent: 'center', marginBottom: 8}}>
+        <View style={{justifyContent: 'center'}}>
           <TouchableOpacity onPress={onSignupClickHandler}>
             <SignUpText>Don't have account? Sign Up</SignUpText>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
-    </Container>
   );
 };
 
@@ -169,7 +170,7 @@ const Container = styled.View`
 
 const FormContainer = styled.View`
   flex: 1;
-  margin-top: 60px;
+  margin-top: 10%;
 `;
 
 const InputContainer = styled.View`
@@ -214,7 +215,6 @@ const SignButton = styled.TouchableOpacity`
 const SignUpText = styled.Text`
   color: #8F9BB3;
   font-weight: bold;
-  margin-top: 10;
   text-align: center;
 `;
 

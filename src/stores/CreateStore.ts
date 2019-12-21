@@ -19,6 +19,7 @@ export interface ICreateStore {
     categoriesLoadingFailed: boolean;
     categories: Category[];
     createPost: CreatePost;
+    resetCreatePost: () => void;
     loadCategories: () => void;
     updateCreatePost: (key: string, value: any) => void;
 }
@@ -38,6 +39,14 @@ export class CreateStore implements ICreateStore {
     @action
     updateCreatePost = (key: string, value: any): void => {
         this.createPost[key] = value;
+    }
+
+    @action.bound
+    resetCreatePost = () => {
+        this.createPost.categoryId = 0;
+        this.createPost.isCommentsEnabled = true;
+        this.createPost.content = '';
+        this.createPost.images = [];
     }
 
     @action.bound

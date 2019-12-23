@@ -184,12 +184,24 @@ class CreateScreen extends React.Component<Props> {
                 label: 'Select a category',
                 value: null,
               }}
-                onValueChange={this.onCategoryHandler}
-                items={[...categories]}
+              style={{
+                inputIOS: {
+                  width: '100%'
+                },
+                inputAndroid: {
+                  width: '100%'
+                },
+                iconContainer: {
+                  top: 3,
+                  right: -10
+                }
+              }}
+              onValueChange={this.onCategoryHandler}
+              items={[...categories]}
+              Icon={() => {
+                return <FontAwesome5 name={'arrow-down'} size={14} color={'black'} />
+              }}
             />
-            <TouchableOpacity style={{position: 'absolute', right: 14, top: 14}} onPress={this.onImagePickerOpen}>
-              <FontAwesome5 name={'arrow-down'} size={14} color={'black'} />
-            </TouchableOpacity>
           </View>
 
           <View style={{flexDirection: 'row', alignItems: 'center', marginBottom: 18}}>

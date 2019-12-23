@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity, Text, Switch, Image, TextInput } from 'react-native';
+import { StyleSheet, View, TouchableOpacity, Text, Switch, Image, TextInput, ActivityIndicator } from 'react-native';
 import { inject, observer } from 'mobx-react';
 import { NavigationParams, SafeAreaView } from 'react-navigation';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -48,19 +48,11 @@ class CreateScreen extends React.Component<Props> {
   }
 
   onSubmitHandler = () => {
-
+    this.props.createStore.postCreatePost();
   }
 
   onRemoveImage = (id: string) => {
-    const index = this.state.images.findIndex(image => image.id === id);
-    if (index !== -1) {
-      this.setState((prevState) => ({
-        images: [
-          ...prevState.images.slice(0, index),
-          ...prevState.images.slice(index + 1)
-        ]
-      }));
-    }
+    this.props.createStore.removeImage(id);
   }
 
   onImagePickerOpen = () => {
@@ -86,21 +78,12 @@ class CreateScreen extends React.Component<Props> {
         this.onAddImage(source);
       }
     });
-  }
+  };
 
   onAddImage = (source: any) => {
     const id = `${Math.random().toString(36).substr(2, 9)}`;
-    const image = {
-      ...source,
-      id
-    };
-    this.setState((prevState) => ({
-      images: [
-        ...prevState.images,
-        {...image}
-      ]
-    }));
-  }
+    this.props.createStore.uploadImage(id, source.uri);
+  };
 
   onCommentsHandler = () => {
     const isCommentsEnabled = !this.props.createStore.createPost.isCommentsEnabled;
@@ -117,7 +100,7 @@ class CreateScreen extends React.Component<Props> {
     if (value.length < 10) {
       this.setState({fontSize: MAX_FONT_SIZE})
     }
-    if (value > 10) {
+    if (value.length > 10) {
       this.setState({fontSize: 22})
     }
 
@@ -145,7 +128,7 @@ class CreateScreen extends React.Component<Props> {
   render() {
     const { images, fontSize } = this.state;
     const { createStore } = this.props;
-    const { categories, createPost } = createStore;
+    const { categories, createPost, isPublishDisabled } = createStore;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -169,13 +152,19 @@ class CreateScreen extends React.Component<Props> {
 
           <View style={styles.imagesContainer}>
             {
-              images.map((image: any) => {
+              createPost.images.map((image: any) => {
                 return (
                   <TouchableOpacity key={image.id}>
                     <View style={styles.imageView}>
-                      <TouchableOpacity style={styles.removeImage} onPress={() => this.onRemoveImage(image.id)}>
-                        <FontAwesome5 name={'times'} size={16} color={'white'} />
-                      </TouchableOpacity>
+                      {
+                      image.path ? (
+                        <TouchableOpacity style={styles.removeImage} onPress={() => this.onRemoveImage(image.id)}>
+                          <FontAwesome5 name={'times'} size={16} color={'white'} />
+                        </TouchableOpacity>
+                      ) : <View style={{borderRadius: 4, position: 'absolute', width: 84, height: 84, left: -1, top: -1, opacity: .5, backgroundColor: 'black', zIndex: 1000, alignItems: 'center', justifyContent: 'center'}}>
+                                <ActivityIndicator size="small" color="#41CBEA" />
+                      </View>
+                      }
                       <Image style={styles.image} source={{uri: image.uri}} />
                     </View>
                   </TouchableOpacity>
@@ -218,8 +207,9 @@ class CreateScreen extends React.Component<Props> {
         <LinearGradient
           style={{width: '100%', borderRadius: 50, borderWidth: 1, paddingVertical: 18, borderColor: 'transparent'}}
           start={{x: 0, y: 0}} end={{x: 1, y: 0}}
-          colors={['#41CBEA', '#2A83DB']}>
+          colors={!isPublishDisabled ? ['#41CBEA', '#2A83DB'] : ['#8F9BB3', '#8F9BB3']}>
           <TouchableOpacity
+            disabled={isPublishDisabled}
             style={{alignItems: 'center'}}
             onPress={this.onSubmitHandler}
           >
@@ -239,6 +229,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     padding: 24,
     flex: 1,
+    backgroundColor: '#F8FAFB'
   },
   content: {
     alignItems: 'center',
@@ -310,7 +301,7 @@ const styles = StyleSheet.create({
     width: 84,
     height: 84,
     resizeMode: 'cover',
-    borderWidth: 1,
+    borderWidth: 0,
     borderColor: 'transparent',
     borderRadius: 4,
   },

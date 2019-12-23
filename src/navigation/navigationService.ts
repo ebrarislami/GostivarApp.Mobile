@@ -24,8 +24,17 @@ function push(routeName, params) {
   );
 }
 
+function goBack(params) {
+  navigator.push(
+    StackActions.pop({
+      params,
+    })
+  );
+}
+
 export default {
   navigate,
   push,
+  goBack,
   setTopLevelNavigator,
 };

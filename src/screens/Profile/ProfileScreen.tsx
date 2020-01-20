@@ -11,10 +11,6 @@ export interface Props {
   profileStore: IProfileStore;
 }
 
-interface State {
-
-}
-
 const ProfileScreen: React.FunctionComponent<Props> = (props: Props) => {
 
   const { loading,
@@ -28,7 +24,8 @@ const ProfileScreen: React.FunctionComponent<Props> = (props: Props) => {
     textInputs,
     toggleNotification,
     enableAllNotifications,
-    isAllNotificationsEnabled } = props.profileStore;
+    isAllNotificationsEnabled,
+  } = props.profileStore;
 
   let nameInputRef = useRef(null);
   let surnameInputRef = useRef(null);

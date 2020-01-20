@@ -21,11 +21,11 @@ class Initialization extends React.Component<Props, State> {
 
   async componentDidMount() {
     try {
-      const user = await AsyncStorage.getItem('@user')
-      if(user !== null) {
+      const user = await AsyncStorage.getItem('@user');
+      if (user !== null) {
         const userJSON = JSON.parse(user);
         const dateNow = new Date().getTime();
-        const compare = compareAsc(new Date(userJSON.expiresIn * 1000), new Date());
+        console.log(compareAsc(userJSON.expiresIn * 1000, dateNow));
         if (userJSON.accessToken && compareAsc(userJSON.expiresIn * 1000, dateNow) === 1) {
           this.props.navigation.navigate('RootStack');
         } else {
@@ -35,7 +35,7 @@ class Initialization extends React.Component<Props, State> {
       } else {
         this.props.navigation.navigate('AuthScreen');
       }
-    } catch(e) {
+    } catch (e) {
       this.props.navigation.navigate('AuthScreen');
     }
   }
@@ -48,12 +48,12 @@ class Initialization extends React.Component<Props, State> {
 }
 
 const styles = StyleSheet.create({
-    container: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        flex: 1,
-    }
+  container: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    flex: 1,
+  },
 });
 
 export default Initialization;

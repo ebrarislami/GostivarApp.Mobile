@@ -12,10 +12,8 @@ import {
 import { inject, observer } from "mobx-react";
 import { NavigationParams, SafeAreaView } from "react-navigation";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import LinearGradient from "react-native-linear-gradient";
-import RNPickerSelect from "react-native-picker-select";
 import ImagePicker from "react-native-image-picker";
-import { Button } from "@components";
+import { Button, Picker, CreatePostImages } from "@components";
 import { ICreateStore } from "../../stores/CreateStore";
 
 export interface Props {
@@ -23,9 +21,7 @@ export interface Props {
   navigation: NavigationParams;
 }
 
-const MIN_FONT_SIZE = 10;
 const MAX_FONT_SIZE = 24;
-const INCREMENT = 2;
 
 class CreateScreen extends React.Component<Props> {
   constructor(props: Props) {
@@ -145,7 +141,7 @@ class CreateScreen extends React.Component<Props> {
   };
 
   render() {
-    const { images, fontSize } = this.state;
+    const { fontSize } = this.state;
     const { createStore } = this.props;
     const { categories, createPost, isPublishDisabled } = createStore;
 
@@ -169,45 +165,10 @@ class CreateScreen extends React.Component<Props> {
           </View>
 
           <View style={styles.imagesContainer}>
-            {createPost.images.map((image: any) => {
-              return (
-                <TouchableOpacity key={image.id}>
-                  <View style={styles.imageView}>
-                    {image.path ? (
-                      <TouchableOpacity
-                        style={styles.removeImage}
-                        onPress={() => this.onRemoveImage(image.id)}
-                      >
-                        <FontAwesome5
-                          name={"times"}
-                          size={16}
-                          color={"white"}
-                        />
-                      </TouchableOpacity>
-                    ) : (
-                      <View
-                        style={{
-                          borderRadius: 4,
-                          position: "absolute",
-                          width: 84,
-                          height: 84,
-                          left: -1,
-                          top: -1,
-                          opacity: 0.5,
-                          backgroundColor: "black",
-                          zIndex: 1000,
-                          alignItems: "center",
-                          justifyContent: "center"
-                        }}
-                      >
-                        <ActivityIndicator size="small" color="#41CBEA" />
-                      </View>
-                    )}
-                    <Image style={styles.image} source={{ uri: image.uri }} />
-                  </View>
-                </TouchableOpacity>
-              );
-            })}
+            <CreatePostImages
+              images={createPost.images}
+              onRemoveImage={this.onRemoveImage}
+            />
             <TouchableOpacity onPress={this.onImagePickerOpen}>
               <View style={styles.imageView}>
                 <FontAwesome5 name={"plus"} size={25} color={"lightgray"} />
@@ -215,41 +176,9 @@ class CreateScreen extends React.Component<Props> {
             </TouchableOpacity>
           </View>
 
-          <View style={styles.picker}>
-            <RNPickerSelect
-              placeholder={{
-                label: "Select a category",
-                value: null
-              }}
-              style={{
-                inputIOS: {
-                  width: "100%"
-                },
-                inputAndroid: {
-                  width: "100%"
-                },
-                iconContainer: {
-                  top: 3,
-                  right: -10
-                }
-              }}
-              onValueChange={this.onCategoryHandler}
-              items={[...categories]}
-              Icon={() => {
-                return (
-                  <FontAwesome5 name={"arrow-down"} size={14} color={"black"} />
-                );
-              }}
-            />
-          </View>
+          <Picker onValueChange={this.onCategoryHandler} items={categories} />
 
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              marginBottom: 18
-            }}
-          >
+          <View style={styles.commentEnabled}>
             <Text style={{ marginRight: 15 }}>Comments Enabled</Text>
             <Switch
               ios_backgroundColor="#FFFFFF"
@@ -307,23 +236,10 @@ const styles = StyleSheet.create({
     width: "100%",
     textAlign: "center"
   },
-  picker: {
-    width: "100%",
-    fontSize: 16,
-    paddingVertical: 12,
-    paddingHorizontal: 10,
-    borderWidth: 1,
-    borderColor: "white",
-    borderRadius: 10,
-    marginBottom: 18,
-    color: "black",
-    backgroundColor: "white",
-    shadowOpacity: 0.75,
-    shadowRadius: 7,
-    shadowColor: "rgba(0, 0, 0, .2)",
-    shadowOffset: { width: 2, height: 1 },
-    elevation: 2,
-    paddingRight: 30
+  commentEnabled: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 18
   },
   imagesContainer: {
     position: "relative",
@@ -344,26 +260,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginBottom: 6,
     marginRight: 16
-  },
-  image: {
-    width: 84,
-    height: 84,
-    resizeMode: "cover",
-    borderWidth: 0,
-    borderColor: "transparent",
-    borderRadius: 4
-  },
-  removeImage: {
-    position: "absolute",
-    width: 24,
-    height: 24,
-    borderRadius: 100,
-    backgroundColor: "#41CBEA",
-    right: -14,
-    top: -10,
-    alignItems: "center",
-    justifyContent: "center",
-    zIndex: 100
   }
 });
 

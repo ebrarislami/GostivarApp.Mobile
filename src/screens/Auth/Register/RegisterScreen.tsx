@@ -1,18 +1,9 @@
 import React, { useRef } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  StatusBar,
-  TouchableOpacity,
-  TextInput,
-  SafeAreaView
-} from "react-native";
+import { StyleSheet, Text, View, StatusBar, SafeAreaView } from "react-native";
 import { NavigationParams } from "react-navigation";
 import { inject, observer } from "mobx-react";
-import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { IRegisterStore } from "../../../stores/RegisterStore";
-import { Button } from "@components";
+import { Button, BackButton, TextInput } from "@components";
 
 export interface Props {
   navigation: NavigationParams;
@@ -54,88 +45,60 @@ const RegisterScreen: React.SFC<Props> = (props: Props) => {
     <View style={{ flex: 1, backgroundColor: "#F8FAFB" }}>
       <SafeAreaView style={styles.container}>
         <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 10,
-            alignItems: "center"
-          }}
-        >
-          <TouchableOpacity
+        <View style={styles.header}>
+          <BackButton
             style={{ flex: 0.33 }}
             onPress={() => props.navigation.goBack()}
-          >
-            <FontAwesome5
-              style={{ marginLeft: 8 }}
-              size={20}
-              color="black"
-              name={"arrow-left"}
-              solid
-            />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 16,
-              flex: 0.33,
-              textAlign: "center"
-            }}
-          >
-            SIGN UP
-          </Text>
+          />
+          <Text style={styles.headerTxt}>SIGN UP</Text>
           <View style={{ flex: 0.33 }}></View>
         </View>
-        <View style={{ flex: 1, marginTop: 40 }}>
+        <View style={styles.formContainer}>
           <TextInput
             value={user.firstName}
             onChangeText={value => onInputChange("firstName", value)}
             scrollEnabled={false}
-            placeholderTextColor="#8F9BB3"
             placeholder="First Name"
             returnKeyType="next"
             onSubmitEditing={() => onFocusNextInput(lastNameInputRef)}
             blurOnSubmit={false}
-            style={[styles.input, { marginBottom: 25 }]}
+            inputStyle={[styles.input, { marginBottom: 25 }]}
           />
           <TextInput
             ref={lastNameInputRef}
             value={user.lastName}
             onChangeText={value => onInputChange("lastName", value)}
             scrollEnabled={false}
-            placeholderTextColor="#8F9BB3"
             placeholder="Last Name"
             returnKeyType="next"
             onSubmitEditing={() => onFocusNextInput(emailInputRef)}
             blurOnSubmit={false}
-            style={[styles.input, { marginBottom: 25 }]}
+            inputStyle={[styles.input, { marginBottom: 25 }]}
           />
           <TextInput
             ref={emailInputRef}
             value={user.email}
             onChangeText={value => onInputChange("email", value)}
             scrollEnabled={false}
-            placeholderTextColor="#8F9BB3"
             placeholder="Email"
             autoCapitalize="none"
             returnKeyType="next"
             onSubmitEditing={() => onFocusNextInput(passwordInputRef)}
             blurOnSubmit={false}
-            style={[styles.input, { marginBottom: 25 }]}
+            inputStyle={[styles.input, { marginBottom: 25 }]}
           />
           <TextInput
             ref={passwordInputRef}
             value={user.password}
             onChangeText={value => onInputChange("password", value)}
             scrollEnabled={false}
-            placeholderTextColor="#8F9BB3"
             placeholder="Password"
             autoCapitalize="none"
             returnKeyType="go"
             onSubmitEditing={onDoneEditing}
             secureTextEntry
             blurOnSubmit={true}
-            style={styles.input}
+            inputStyle={styles.input}
           />
           {loadingFailed && <Text style={styles.errTxt}>{error}</Text>}
 
@@ -172,6 +135,22 @@ const styles = StyleSheet.create({
   },
   validSignBtn: {
     backgroundColor: "#62B4AD"
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+    alignItems: "center"
+  },
+  headerTxt: {
+    fontWeight: "bold",
+    fontSize: 16,
+    flex: 0.33,
+    textAlign: "center"
+  },
+  formContainer: {
+    flex: 1,
+    marginTop: 40
   },
   input: {
     borderWidth: 1,

@@ -7,7 +7,7 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
   Image,
-  Dimensions
+  StyleSheet
 } from "react-native";
 import {
   NavigationParams,
@@ -15,10 +15,9 @@ import {
   SafeAreaView
 } from "react-navigation";
 import { inject, observer } from "mobx-react";
-import styled from "styled-components";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { ILoginStore } from "../../../stores/LoginStore";
-import { Button } from "@components";
+import { Button, TextInput } from "@components";
 
 export interface Props {
   navigation: NavigationParams;
@@ -81,93 +80,61 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
 
   const onFacebookPress = () => {};
 
-  const { height, width } = Dimensions.get("window");
-
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        paddingHorizontal: 16,
-        paddingBottom: 16,
-        justifyContent: "center",
-        backgroundColor: "#F8FAFB"
-      }}
-    >
+    <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <FormContainer>
+        <View style={styles.formContainer}>
           <Image
-            style={{
-              width: 200,
-              height: 200,
-              alignSelf: "center",
-              marginBottom: 20
-            }}
+            style={styles.logo}
             source={require("../../../assets/images/logo.png")}
           />
-          <InputContainer>
-            <IconContainer>
+          <TextInput
+            value={email}
+            onChangeText={onEmailChange}
+            onSubmitEditing={onEndEmail}
+            scrollEnabled={false}
+            placeholder="Email"
+            returnKeyType="next"
+            autoCapitalize="none"
+            blurOnSubmit={false}
+            inputStyle={{
+              borderColor: isSignClicked && !email ? "red" : "transparent"
+            }}
+            icon={
               <FontAwesome5 size={14} color="#8F9BB3" name={"user"} solid />
-            </IconContainer>
-            <Input
-              value={email}
-              onChangeText={(value: string) => onEmailChange(value)}
-              scrollEnabled={false}
-              onSubmitEditing={onEndEmail}
-              placeholderTextColor="#8F9BB3"
-              autoCapitalize="none"
-              placeholder="Email"
-              returnKeyType="next"
-              blurOnSubmit={false}
-              style={{
-                borderColor: isSignClicked && !email ? "red" : "transparent"
-              }}
-            />
-          </InputContainer>
-          <InputContainer style={{ marginTop: 25 }}>
-            <IconContainer>
-              <FontAwesome5 size={14} color="#8F9BB3" name={"lock"} />
-            </IconContainer>
-            <Input
-              ref={passwordInputRef}
-              value={password}
-              onChangeText={(value: string) => onPasswordChange(value)}
-              scrollEnabled={false}
-              placeholderTextColor="#8F9BB3"
-              autoCapitalize="none"
-              returnKeyType="go"
-              placeholder="Password"
-              onSubmitEditing={onEndPassword}
-              blurOnSubmit={true}
-              style={{
-                borderColor: isSignClicked && !password ? "red" : "transparent"
-              }}
-              secureTextEntry
-            />
-          </InputContainer>
+            }
+          />
+          <TextInput
+            ref={passwordInputRef}
+            value={password}
+            onChangeText={onPasswordChange}
+            scrollEnabled={false}
+            placeholder="Password"
+            returnKeyType="go"
+            autoCapitalize="none"
+            onSubmitEditing={onEndPassword}
+            blurOnSubmit={true}
+            containerStyle={{ marginTop: 25 }}
+            inputStyle={{
+              borderColor: isSignClicked && !password ? "red" : "transparent"
+            }}
+            secureTextEntry
+            icon={<FontAwesome5 size={14} color="#8F9BB3" name={"lock"} />}
+          />
           <TouchableOpacity
             onPress={() => props.navigation.push("ForgotPasswordScreen")}
           >
-            <Text
-              style={{
-                color: "#8F9BB3",
-                fontWeight: "bold",
-                marginTop: 15,
-                textAlign: "right"
-              }}
-            >
-              Forgot password?
-            </Text>
+            <Text style={styles.forgotPasswordTxt}>Forgot password?</Text>
           </TouchableOpacity>
           {
             <Text
-              style={{
-                opacity: loadingFailed ? 1 : 0,
-                color: "red",
-                fontWeight: "bold",
-                marginTop: 10,
-                textAlign: "center"
-              }}
+              style={[
+                styles.errTxt,
+                {
+                  opacity: loadingFailed ? 1 : 0
+                }
+              ]}
             >
               {error}
             </Text>
@@ -178,23 +145,8 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
             disabled={loading}
             onPress={onLoginHandler}
           />
-          <Text
-            style={{
-              color: "#8F9BB3",
-              fontWeight: "bold",
-              marginVertical: "4%",
-              textAlign: "center"
-            }}
-          >
-            Or
-          </Text>
-          <View
-            style={{
-              alignItems: "center",
-              flexDirection: "row",
-              justifyContent: "center"
-            }}
-          >
+          <Text style={styles.orTxt}>Or</Text>
+          <View style={styles.iconContainer}>
             <TouchableWithoutFeedback onPress={onGooglePressed}>
               <FontAwesome5
                 style={{ marginRight: 25 }}
@@ -207,11 +159,11 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
               <FontAwesome5 size={22} color="#3B5998" name={"facebook"} />
             </TouchableWithoutFeedback>
           </View>
-        </FormContainer>
+        </View>
       </TouchableWithoutFeedback>
       <View style={{ justifyContent: "center" }}>
         <TouchableOpacity onPress={onSignupClickHandler}>
-          <SignUpText>Don't have account? Sign Up</SignUpText>
+          <Text style={styles.signUpTxt}>Don't have account? Sign Up</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -224,41 +176,52 @@ LoginScreen.navigationOptions = () => {
   };
 };
 
-const FormContainer = styled.View`
-  flex: 1;
-  margin-top: 10%;
-`;
-
-const InputContainer = styled.View`
-  position: relative;
-`;
-
-const IconContainer = styled.View`
-  position: absolute;
-  z-index: 1;
-  top: 20px;
-  left: 15px;
-`;
-
-const Input = styled.TextInput`
-  border-width: 1;
-  border-color: transparent;
-  background-color: white;
-  border-radius: 50px;
-  padding-left: 40px;
-  padding-top: 18px;
-  padding-bottom: 18px;
-  shadow-opacity: 0.75;
-  shadow-radius: 5;
-  shadow-color: rgba(0, 0, 0, 0.2);
-  shadow-offset: 0px 2px;
-  elevation: 2;
-`;
-
-const SignUpText = styled.Text`
-  color: #8f9bb3;
-  font-weight: bold;
-  text-align: center;
-`;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    justifyContent: "center",
+    backgroundColor: "#F8FAFB"
+  },
+  logo: {
+    width: 200,
+    height: 200,
+    alignSelf: "center",
+    marginBottom: 20
+  },
+  formContainer: {
+    flex: 1,
+    marginTop: "10%"
+  },
+  orTxt: {
+    color: "#8F9BB3",
+    fontWeight: "bold",
+    marginVertical: "4%",
+    textAlign: "center"
+  },
+  iconContainer: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center"
+  },
+  forgotPasswordTxt: {
+    color: "#8F9BB3",
+    fontWeight: "bold",
+    marginTop: 15,
+    textAlign: "right"
+  },
+  errTxt: {
+    color: "red",
+    fontWeight: "bold",
+    marginTop: 10,
+    textAlign: "center"
+  },
+  signUpTxt: {
+    color: "#8f9bb3",
+    fontWeight: "bold",
+    textAlign: "center"
+  }
+});
 
 export default inject("loginStore")(observer(LoginScreen));

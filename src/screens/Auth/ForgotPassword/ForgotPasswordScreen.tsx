@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Text,
   StatusBar,
-  TouchableOpacity,
   View,
-  TextInput,
   StyleSheet,
   SafeAreaView,
   Keyboard,
@@ -18,9 +16,8 @@ import {
 import { inject, observer } from "mobx-react";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import Modal from "react-native-modal";
-import styled from "styled-components";
 import LottieView from "lottie-react-native";
-import { Button } from "@components";
+import { Button, TextInput, BackButton, SuccessModal } from "@components";
 
 export interface Props {
   navigation: NavigationParams;
@@ -81,67 +78,38 @@ const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
   };
 
   return (
-    <Container>
-      <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
-      <SafeAreaView
-        style={{ flex: 1, justifyContent: "flex-start", margin: 16 }}
-      >
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "space-between",
-            marginTop: 10,
-            alignItems: "center"
-          }}
-        >
-          <TouchableOpacity
+    <SafeAreaView style={styles.safeArea}>
+      <View style={styles.container}>
+        <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
+        <View style={styles.header}>
+          <BackButton
             style={{ flex: 0.33 }}
             onPress={() => props.navigation.goBack()}
-          >
-            <FontAwesome5
-              style={{ marginLeft: 8 }}
-              size={20}
-              color="black"
-              name={"arrow-left"}
-              solid
-            />
-          </TouchableOpacity>
-          <Text
-            style={{
-              fontWeight: "bold",
-              fontSize: 16,
-              flex: 1,
-              textAlign: "center"
-            }}
-          >
-            FORGOT PASSWORD
-          </Text>
+          />
+          <Text style={styles.headerTxt}>FORGOT PASSWORD</Text>
           <View style={{ flex: 0.33 }} />
         </View>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
           <View style={{ flex: 1 }}>
             <View style={{ flex: 0.4 }} />
-            <View style={styles.container}>
-              <InputContainer>
-                <IconContainer>
+            <View style={styles.inputContainer}>
+              <TextInput
+                autoFocus
+                value={email}
+                onChangeText={setEmail}
+                onSubmitEditing={onEndEditing}
+                scrollEnabled={false}
+                placeholder="Email"
+                returnKeyType="go"
+                autoCapitalize="none"
+                blurOnSubmit={false}
+                inputStyle={{
+                  borderColor: isClicked && !email ? "red" : "transparent"
+                }}
+                icon={
                   <FontAwesome5 size={14} color="#8F9BB3" name={"user"} solid />
-                </IconContainer>
-                <Input
-                  autoFocus
-                  value={email}
-                  onChangeText={(value: string) => setEmail(value)}
-                  scrollEnabled={false}
-                  onSubmitEditing={onEndEditing}
-                  placeholderTextColor="#8F9BB3"
-                  autoCapitalize="none"
-                  placeholder="Email"
-                  returnKeyType="go"
-                  blurOnSubmit={false}
-                  style={{
-                    borderColor: isClicked && !email ? "red" : "transparent"
-                  }}
-                />
-              </InputContainer>
+                }
+              />
               <Button
                 style={{ marginTop: 40 }}
                 text={loading ? "LOADING..." : "SEND"}
@@ -149,13 +117,12 @@ const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
                 onPress={onForgotPasswordHandler}
               />
               <Text
-                style={{
-                  opacity: loadingFailed ? 1 : 0,
-                  color: "red",
-                  fontWeight: "bold",
-                  marginTop: 15,
-                  textAlign: "center"
-                }}
+                style={[
+                  styles.errTxt,
+                  {
+                    opacity: loadingFailed ? 1 : 0
+                  }
+                ]}
               >
                 {error}
               </Text>
@@ -163,43 +130,41 @@ const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
           </View>
         </TouchableWithoutFeedback>
 
-        <Modal
-          isVisible={success}
-          backdropColor="#B4B3DB"
-          backdropOpacity={0.8}
-          animationIn="zoomInDown"
-          animationOut="zoomOutUp"
-          animationInTiming={600}
-          animationOutTiming={600}
-          backdropTransitionInTiming={600}
-          backdropTransitionOutTiming={600}
-        >
-          <View style={styles.content}>
-            <LottieView
-              style={{ width: 120, height: 120 }}
-              source={require("../../../assets/images/success.json")}
-              loop={false}
-              autoPlay
-            />
-            <Text
-              style={{
-                textAlign: "center",
-                color: "#59B189",
-                fontWeight: "bold",
-                fontSize: 16
-              }}
-            >
-              Email Sent
-            </Text>
-          </View>
-        </Modal>
-      </SafeAreaView>
-    </Container>
+        <SuccessModal visible={success} text="Email Sent" />
+      </View>
+    </SafeAreaView>
   );
 };
 
+ForgotPasswordScreen.navigationOptions = () => {
+  return {
+    header: null
+  };
+};
+
 const styles = StyleSheet.create({
+  safeArea: {
+    flex: 1,
+    justifyContent: "flex-start",
+    backgroundColor: "#f8fafb"
+  },
   container: {
+    flex: 1,
+    marginHorizontal: 16
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 10,
+    alignItems: "center"
+  },
+  headerTxt: {
+    fontWeight: "bold",
+    fontSize: 16,
+    flex: 1,
+    textAlign: "center"
+  },
+  inputContainer: {
     flex: 1
   },
   content: {
@@ -209,50 +174,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     borderRadius: 4,
     borderColor: "rgba(0, 0, 0, 0.1)"
+  },
+  errTxt: {
+    color: "red",
+    fontWeight: "bold",
+    marginTop: 15,
+    textAlign: "center"
   }
 });
-
-ForgotPasswordScreen.navigationOptions = () => {
-  return {
-    header: null
-  };
-};
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1
-//   },
-// });
-
-const Container = styled.View`
-  flex: 1;
-  justify-content: flex-start;
-  background-color: #f8fafb;
-`;
-
-const InputContainer = styled.View`
-  position: relative;
-`;
-
-const IconContainer = styled.View`
-  position: absolute;
-  z-index: 1;
-  top: 20px;
-  left: 15px;
-`;
-
-const Input = styled.TextInput`
-  border-width: 1;
-  border-color: transparent;
-  background-color: white;
-  border-radius: 50px;
-  padding-left: 40px;
-  padding-top: 18px;
-  padding-bottom: 18px;
-  shadow-opacity: 0.75;
-  shadow-radius: 5;
-  shadow-color: rgba(0, 0, 0, 0.2);
-  shadow-offset: 0px 2px;
-`;
 
 export default inject("forgotPasswordStore")(observer(ForgotPasswordScreen));

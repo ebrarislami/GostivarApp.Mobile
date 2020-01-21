@@ -2,6 +2,7 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import Modal from "react-native-modal";
 import LottieView from "lottie-react-native";
+import { Colors } from "@components";
 
 export interface Props {
   visible: boolean;
@@ -12,7 +13,7 @@ const SuccessModal: React.SFC<Props> = (props: Props) => {
   return (
     <Modal
       isVisible={props.visible}
-      backdropColor="#B4B3DB"
+      backdropColor={Colors.backdrop}
       backdropOpacity={0.8}
       animationIn="zoomInDown"
       animationOut="zoomOutUp"
@@ -36,12 +37,12 @@ const SuccessModal: React.SFC<Props> = (props: Props) => {
 
 const styles = StyleSheet.create({
   content: {
-    backgroundColor: "transparent",
+    backgroundColor: Colors.transparent,
     padding: 22,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 4,
-    borderColor: "rgba(0, 0, 0, 0.1)"
+    borderColor: Colors.black01
   },
   img: {
     width: 120,
@@ -49,7 +50,7 @@ const styles = StyleSheet.create({
   },
   text: {
     textAlign: "center",
-    color: "#59B189",
+    color: Colors.green,
     fontWeight: "bold",
     fontSize: 16
   }

@@ -17,7 +17,7 @@ import {
 import { inject, observer } from "mobx-react";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import { ILoginStore } from "../../../stores/LoginStore";
-import { Button, TextInput } from "@components";
+import { Button, TextInput, Colors } from "@components";
 
 export interface Props {
   navigation: NavigationParams;
@@ -82,7 +82,7 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
+      <StatusBar backgroundColor={Colors.lightgray} barStyle="dark-content" />
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.formContainer}>
           <Image
@@ -99,10 +99,11 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
             autoCapitalize="none"
             blurOnSubmit={false}
             inputStyle={{
-              borderColor: isSignClicked && !email ? "red" : "transparent"
+              borderColor:
+                isSignClicked && !email ? Colors.red : Colors.transparent
             }}
             icon={
-              <FontAwesome5 size={14} color="#8F9BB3" name={"user"} solid />
+              <FontAwesome5 size={14} color={Colors.gray} name={"user"} solid />
             }
           />
           <TextInput
@@ -117,10 +118,11 @@ const LoginScreen: React.SFC<Props> = (props: Props) => {
             blurOnSubmit={true}
             containerStyle={{ marginTop: 25 }}
             inputStyle={{
-              borderColor: isSignClicked && !password ? "red" : "transparent"
+              borderColor:
+                isSignClicked && !password ? Colors.red : Colors.transparent
             }}
             secureTextEntry
-            icon={<FontAwesome5 size={14} color="#8F9BB3" name={"lock"} />}
+            icon={<FontAwesome5 size={14} color={Colors.gray} name={"lock"} />}
           />
           <TouchableOpacity
             onPress={() => props.navigation.push("ForgotPasswordScreen")}
@@ -182,7 +184,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 16,
     justifyContent: "center",
-    backgroundColor: "#F8FAFB"
+    backgroundColor: Colors.lightgray
   },
   logo: {
     width: 200,
@@ -195,7 +197,7 @@ const styles = StyleSheet.create({
     marginTop: "10%"
   },
   orTxt: {
-    color: "#8F9BB3",
+    color: Colors.gray,
     fontWeight: "bold",
     marginVertical: "4%",
     textAlign: "center"
@@ -206,7 +208,7 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   },
   forgotPasswordTxt: {
-    color: "#8F9BB3",
+    color: Colors.gray,
     fontWeight: "bold",
     marginTop: 15,
     textAlign: "right"
@@ -218,7 +220,7 @@ const styles = StyleSheet.create({
     textAlign: "center"
   },
   signUpTxt: {
-    color: "#8f9bb3",
+    color: Colors.gray,
     fontWeight: "bold",
     textAlign: "center"
   }

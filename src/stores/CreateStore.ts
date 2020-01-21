@@ -96,7 +96,7 @@ export class CreateStore implements ICreateStore {
     }
   };
 
-  @action.bound
+  @action
   uploadImage = async (id: string, path: string): Promise<void> => {
     const image: Image = {
       id,
@@ -105,7 +105,10 @@ export class CreateStore implements ICreateStore {
       loadingFailed: false,
       path: ""
     };
-    this.createPost.images.push(image);
+
+    this.createPost["images"] = [...this.createPost.images, image];
+
+    // this.createPost.images.push(image);
 
     let uri = path;
     if (Platform.OS === "android") {
@@ -133,7 +136,11 @@ export class CreateStore implements ICreateStore {
           img => img.id === image.id
         );
         if (index !== -1) {
-          this.createPost.images[index] = image;
+          this.createPost["images"] = [
+            ...this.createPost.images.slice(0, index),
+            image,
+            ...this.createPost.images.slice(index + 1)
+          ];
         }
       })
       .catch(err => {

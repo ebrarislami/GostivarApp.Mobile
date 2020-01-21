@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, StatusBar, SafeAreaView } from "react-native";
 import { NavigationParams } from "react-navigation";
 import { inject, observer } from "mobx-react";
 import { IRegisterStore } from "../../../stores/RegisterStore";
-import { Button, BackButton, TextInput } from "@components";
+import { Button, BackButton, TextInput, Colors } from "@components";
 
 export interface Props {
   navigation: NavigationParams;
@@ -42,9 +42,9 @@ const RegisterScreen: React.SFC<Props> = (props: Props) => {
     ref && ref.current.focus();
   };
   return (
-    <View style={{ flex: 1, backgroundColor: "#F8FAFB" }}>
+    <View style={{ flex: 1, backgroundColor: Colors.lightgray }}>
       <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
+        <StatusBar backgroundColor={Colors.lightgray} barStyle="dark-content" />
         <View style={styles.header}>
           <BackButton
             style={{ flex: 0.33 }}
@@ -62,7 +62,7 @@ const RegisterScreen: React.SFC<Props> = (props: Props) => {
             returnKeyType="next"
             onSubmitEditing={() => onFocusNextInput(lastNameInputRef)}
             blurOnSubmit={false}
-            inputStyle={[styles.input, { marginBottom: 25 }]}
+            inputStyle={{ marginBottom: 25 }}
           />
           <TextInput
             ref={lastNameInputRef}
@@ -73,7 +73,7 @@ const RegisterScreen: React.SFC<Props> = (props: Props) => {
             returnKeyType="next"
             onSubmitEditing={() => onFocusNextInput(emailInputRef)}
             blurOnSubmit={false}
-            inputStyle={[styles.input, { marginBottom: 25 }]}
+            inputStyle={{ marginBottom: 25 }}
           />
           <TextInput
             ref={emailInputRef}
@@ -85,7 +85,7 @@ const RegisterScreen: React.SFC<Props> = (props: Props) => {
             returnKeyType="next"
             onSubmitEditing={() => onFocusNextInput(passwordInputRef)}
             blurOnSubmit={false}
-            inputStyle={[styles.input, { marginBottom: 25 }]}
+            inputStyle={{ marginBottom: 25 }}
           />
           <TextInput
             ref={passwordInputRef}
@@ -98,7 +98,6 @@ const RegisterScreen: React.SFC<Props> = (props: Props) => {
             onSubmitEditing={onDoneEditing}
             secureTextEntry
             blurOnSubmit={true}
-            inputStyle={styles.input}
           />
           {loadingFailed && <Text style={styles.errTxt}>{error}</Text>}
 
@@ -126,16 +125,6 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 16
   },
-  signBtn: {
-    backgroundColor: "#F7F9FC",
-    borderRadius: 5,
-    width: "100%",
-    paddingVertical: 20,
-    alignItems: "center"
-  },
-  validSignBtn: {
-    backgroundColor: "#62B4AD"
-  },
   header: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -152,20 +141,8 @@ const styles = StyleSheet.create({
     flex: 1,
     marginTop: 40
   },
-  input: {
-    borderWidth: 1,
-    borderColor: "transparent",
-    backgroundColor: "white",
-    borderRadius: 50,
-    paddingLeft: 10,
-    paddingVertical: 18,
-    shadowColor: "rgba(0, 0, 0, .3)",
-    shadowRadius: 5,
-    shadowOpacity: 0.75,
-    shadowOffset: { height: 2, width: 0 }
-  },
   errTxt: {
-    color: "red",
+    color: Colors.red,
     fontWeight: "bold",
     marginTop: 10,
     textAlign: "center"

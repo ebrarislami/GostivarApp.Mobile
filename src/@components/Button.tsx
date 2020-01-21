@@ -1,6 +1,7 @@
 import React from "react";
 import { Text, TouchableOpacity, StyleSheet } from "react-native";
 import LinearGradient from "react-native-linear-gradient";
+import { Colors } from "@components";
 
 export interface Props {
   text: string;
@@ -16,7 +17,7 @@ const Button: React.SFC<Props> = (props: Props) => {
       style={[styles.buttonGradient, props.style]}
       start={{ x: 0, y: 0 }}
       end={{ x: 1, y: 0 }}
-      colors={props.colors || ["#41CBEA", "#2A83DB"]}
+      colors={props.colors || [Colors.primary, Colors.secondary]}
     >
       <TouchableOpacity
         style={styles.touchable}
@@ -35,7 +36,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     borderWidth: 1,
     paddingVertical: 18,
-    borderColor: "transparent",
+    borderColor: Colors.transparent,
     alignItems: "center"
   },
   touchable: {
@@ -43,7 +44,7 @@ const styles = StyleSheet.create({
     alignItems: "center"
   },
   text: {
-    color: "white",
+    color: Colors.white,
     fontWeight: "bold"
   }
 });

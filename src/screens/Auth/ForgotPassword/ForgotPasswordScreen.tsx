@@ -15,9 +15,13 @@ import {
 } from "react-navigation";
 import { inject, observer } from "mobx-react";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
-import Modal from "react-native-modal";
-import LottieView from "lottie-react-native";
-import { Button, TextInput, BackButton, SuccessModal } from "@components";
+import {
+  Button,
+  TextInput,
+  BackButton,
+  SuccessModal,
+  Colors
+} from "@components";
 
 export interface Props {
   navigation: NavigationParams;
@@ -80,7 +84,7 @@ const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
   return (
     <SafeAreaView style={styles.safeArea}>
       <View style={styles.container}>
-        <StatusBar backgroundColor="#F8FAFB" barStyle="dark-content" />
+        <StatusBar backgroundColor={Colors.lightgray} barStyle="dark-content" />
         <View style={styles.header}>
           <BackButton
             style={{ flex: 0.33 }}
@@ -104,10 +108,16 @@ const ForgotPasswordScreen: React.SFC<Props> = (props: Props) => {
                 autoCapitalize="none"
                 blurOnSubmit={false}
                 inputStyle={{
-                  borderColor: isClicked && !email ? "red" : "transparent"
+                  borderColor:
+                    isClicked && !email ? Colors.red : Colors.transparent
                 }}
                 icon={
-                  <FontAwesome5 size={14} color="#8F9BB3" name={"user"} solid />
+                  <FontAwesome5
+                    size={14}
+                    color={Colors.gray}
+                    name={"user"}
+                    solid
+                  />
                 }
               />
               <Button
@@ -146,7 +156,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     justifyContent: "flex-start",
-    backgroundColor: "#f8fafb"
+    backgroundColor: Colors.lightgray
   },
   container: {
     flex: 1,
@@ -173,10 +183,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 4,
-    borderColor: "rgba(0, 0, 0, 0.1)"
+    borderColor: Colors.black01
   },
   errTxt: {
-    color: "red",
+    color: Colors.red,
     fontWeight: "bold",
     marginTop: 15,
     textAlign: "center"

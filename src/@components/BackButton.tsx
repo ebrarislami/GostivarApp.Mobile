@@ -1,6 +1,7 @@
 import React from "react";
 import { TouchableOpacity, StyleSheet } from "react-native";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import { Colors } from "@components";
 
 export interface Props {
   style?: Object;
@@ -13,7 +14,7 @@ const BackButton: React.SFC<Props> = (props: Props) => {
       <FontAwesome5
         style={styles.icon}
         size={20}
-        color="black"
+        color={Colors.black}
         name={"arrow-left"}
         solid
       />

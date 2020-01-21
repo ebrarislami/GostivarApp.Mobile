@@ -1,10 +1,18 @@
-import React, { useRef, useEffect } from 'react';
-import { StyleSheet, View, Button, StatusBar, TouchableOpacity, Text, TextInput, Picker, TouchableHighlight } from 'react-native';
-import { inject, observer } from 'mobx-react';
-import { NavigationParams, SafeAreaView, ScrollView } from 'react-navigation';
-import { IProfileStore } from '../../stores/ProfileStore';
-import LinearGradient from 'react-native-linear-gradient';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import React, { useRef, useEffect } from "react";
+import {
+  StyleSheet,
+  View,
+  StatusBar,
+  Text,
+  Picker,
+  TouchableHighlight
+} from "react-native";
+import { inject, observer } from "mobx-react";
+import { NavigationParams, SafeAreaView, ScrollView } from "react-navigation";
+import { IProfileStore } from "../../stores/ProfileStore";
+import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
+import { Colors, Button, TextInput } from "@components";
+import NotificationTags from "../../@components/NotificationTags";
 
 export interface Props {
   navigation: NavigationParams;
@@ -12,8 +20,8 @@ export interface Props {
 }
 
 const ProfileScreen: React.FunctionComponent<Props> = (props: Props) => {
-
-  const { loading,
+  const {
+    loading,
     loadingFailed,
     error,
     selectAppLanguage,
@@ -24,7 +32,7 @@ const ProfileScreen: React.FunctionComponent<Props> = (props: Props) => {
     textInputs,
     toggleNotification,
     enableAllNotifications,
-    isAllNotificationsEnabled,
+    isAllNotificationsEnabled
   } = props.profileStore;
 
   let nameInputRef = useRef(null);
@@ -34,169 +42,122 @@ const ProfileScreen: React.FunctionComponent<Props> = (props: Props) => {
   const onUpdateHandler = () => {
     const { update } = props.profileStore;
     update();
-  }
+  };
 
   const onInputChange = (key: string, value: any) => {
     const { updateTextInputs } = props.profileStore;
     updateTextInputs(key, value);
-  }
+  };
 
   const onDoneEditing = () => {
     onUpdateHandler();
-  }
+  };
 
   const onFocusNextInput = (ref: any) => {
     ref && ref.current.focus();
-  }
+  };
 
   useEffect(() => {
     props.profileStore.loadProfile();
   }, []);
 
-  const selectAllView = (
-    <TouchableHighlight underlayColor='rgba(255, 255, 255, 0.0)' key={'ALL'} style={{ alignItems: 'center', justifyContent: 'center' }} onPress={() => enableAllNotifications()}>
-      <View>
-        <FontAwesome5 style={{ marginLeft: 8, marginRight: 8 }} size={20} color='green' name={'check-circle'} solid />
-      </View>
-    </TouchableHighlight>
-  );
-
   return (
-    <ScrollView style={{ flex: 1, backgroundColor: '#F8FAFB' }}>
-      <View style={{ height: 60, marginTop: 20 }} >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          horizontal={true}
-          showsHorizontalScrollIndicator={false}
-        >
-          {isAllNotificationsEnabled ? null : selectAllView}
-          {enabledNotifications.map((notification, index) => {
-            return (
-              <TouchableHighlight underlayColor='rgba(255, 255, 255, 0.0)' key={notification.id} style={{ alignItems: 'center', justifyContent: 'center', margin: 2 }} onPress={() => toggleNotification(index)}>
-                <View>
-                  <Text style={[styles.notificationTag, notification.enabled ? styles.blueBackground : styles.disabledStyle]}>{notification.name}</Text>
-                </View>
-              </TouchableHighlight>
-            )
-          })}
-        </ScrollView>
+    <ScrollView style={{ flex: 1, backgroundColor: Colors.lightgray }}>
+      <StatusBar backgroundColor={Colors.white} barStyle="dark-content" />
+      <View style={{ marginVertical: 15 }}>
+        <NotificationTags
+          notifications={enabledNotifications}
+          isAllNotificationsEnabled={isAllNotificationsEnabled}
+          onPress={toggleNotification}
+          onEnableAll={enableAllNotifications}
+        />
       </View>
       <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor="#FFF" barStyle="dark-content" />
         <View style={{ flex: 1 }}>
           <Text>App language: </Text>
-          <Picker style={[styles.picker]} selectedValue={appLanguage} onValueChange={selectAppLanguage}>
+          <Picker
+            style={[styles.picker]}
+            selectedValue={appLanguage}
+            onValueChange={selectAppLanguage}
+          >
             <Picker.Item label="Turkish" value="TR-tr" />
             <Picker.Item label="English" value="EN-us" />
             <Picker.Item label="Albanian" value="AL-al" />
             <Picker.Item label="Macedonian" value="MK-mk" />
           </Picker>
           <Text>Profile display as: </Text>
-          <Picker style={[styles.picker]} selectedValue={profileDisplayType} onValueChange={selectProfileDisplayType}>
+          <Picker
+            style={[styles.picker]}
+            selectedValue={profileDisplayType}
+            onValueChange={selectProfileDisplayType}
+          >
             <Picker.Item label="Username" value="username" />
             <Picker.Item label="Name & Surname" value="name_surname" />
           </Picker>
           <TextInput
             value={textInputs.firstName}
-            onChangeText={(value) => onInputChange('firstName', value)}
-            scrollEnabled={false}
-            placeholderTextColor='#8F9BB3'
-            placeholder='Name'
-            returnKeyType='next'
+            onChangeText={value => onInputChange("firstName", value)}
+            placeholder="Name"
+            returnKeyType="next"
             onSubmitEditing={() => onFocusNextInput(surnameInputRef)}
             blurOnSubmit={false}
-            style={[styles.input, { marginBottom: 25 }]}
+            inputStyle={{ marginBottom: 25 }}
           />
           <TextInput
             ref={surnameInputRef}
             value={textInputs.lastName}
-            onChangeText={(value) => onInputChange('lastName', value)}
-            scrollEnabled={false}
-            placeholderTextColor='#8F9BB3'
-            placeholder='Surname'
-            returnKeyType='next'
+            onChangeText={value => onInputChange("lastName", value)}
+            placeholder="Surname"
+            returnKeyType="next"
             onSubmitEditing={() => onFocusNextInput(usernameInputRef)}
             blurOnSubmit={false}
-            style={[styles.input, { marginBottom: 25 }]}
+            inputStyle={{ marginBottom: 25 }}
           />
           <TextInput
             ref={usernameInputRef}
             value={textInputs.username}
-            onChangeText={(value) => onInputChange('username', value)}
-            scrollEnabled={false}
-            placeholderTextColor='#8F9BB3'
-            placeholder='Username'
-            autoCapitalize='none'
-            returnKeyType='next'
+            onChangeText={value => onInputChange("username", value)}
+            placeholder="Username"
+            autoCapitalize="none"
+            returnKeyType="next"
             blurOnSubmit={false}
-            style={[styles.input, { marginBottom: 25 }]}
+            inputStyle={{ marginBottom: 25 }}
           />
-          {
-            loadingFailed && <Text style={styles.errTxt}>{error}</Text>
-          }
-
-          <LinearGradient
-            style={{ elevation: 3, shadowOpacity: 0.75, shadowRadius: 5, shadowColor: 'rgba(0, 0, 0, .3)', shadowOffset: { height: 3, width: 0 }, width: '100%', borderRadius: 50, borderWidth: 1, paddingVertical: 18, borderColor: 'transparent', alignItems: 'center', marginTop: 45 }}
-            start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }}
-            colors={['#41CBEA', '#2A83DB']}>
-            <TouchableOpacity
-              style={{ width: '100%', alignItems: 'center' }}
-              disabled={loading}
-              onPress={onUpdateHandler}
-            >
-              <Text style={{ color: 'white', fontWeight: 'bold' }}>{loading ? 'LOADING...' : 'UPDATE PROFILE'}</Text>
-            </TouchableOpacity>
-          </LinearGradient>
+          {loadingFailed && <Text style={styles.errTxt}>{error}</Text>}
+          <Button
+            style={{ marginTop: 30 }}
+            text={loading ? "LOADING..." : "UPDATE PROFILE"}
+            disabled={loading}
+            onPress={onUpdateHandler}
+          />
         </View>
       </SafeAreaView>
     </ScrollView>
-  )
-}
+  );
+};
 
 ProfileScreen.navigationOptions = () => {
   return {
-    title: 'Profile Settings'
-  }
+    title: "Profile Settings"
+  };
 };
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: 'center',
+    justifyContent: "center",
     flex: 1,
     marginLeft: 16,
     marginRight: 16
-  },
-  signBtn: {
-    backgroundColor: '#F7F9FC',
-    borderRadius: 5,
-    width: '100%',
-    paddingVertical: 20,
-    alignItems: 'center'
-  },
-  validSignBtn: {
-    backgroundColor: '#62B4AD',
   },
   picker: {
     marginTop: 10,
     marginBottom: 10
   },
-  input: {
-    borderWidth: 1,
-    borderColor: 'transparent',
-    backgroundColor: 'white',
-    borderRadius: 50,
-    paddingLeft: 10,
-    paddingVertical: 18,
-    shadowColor: 'rgba(0, 0, 0, .3)',
-    shadowRadius: 5,
-    shadowOpacity: 0.75,
-    shadowOffset: { height: 2, width: 0 }
-  },
   errTxt: {
-    color: 'red',
-    fontWeight: 'bold',
+    color: Colors.red,
+    fontWeight: "bold",
     marginTop: 10,
-    textAlign: 'center'
+    textAlign: "center"
   },
   notificationTag: {
     marginRight: 4,
@@ -204,20 +165,21 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     paddingRight: 12,
     paddingLeft: 12,
-    borderColor: 'blue',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 20,
-    color: 'white'
+    borderColor: Colors.primary,
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
+    borderRadius: 6,
+    color: Colors.white
   },
   blueBackground: {
-    backgroundColor: 'blue',
+    backgroundColor: Colors.primary
   },
   disabledStyle: {
-    borderColor: 'blue',
+    borderColor: Colors.primary,
     borderWidth: 1,
-    backgroundColor: 'transparent',
-    color: 'blue'
+    backgroundColor: Colors.transparent,
+    color: Colors.primary
   }
 });
 

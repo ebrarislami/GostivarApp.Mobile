@@ -1,19 +1,16 @@
 import React from "react";
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  Text,
-  Switch,
-  Image,
-  TextInput,
-  ActivityIndicator
-} from "react-native";
+import { StyleSheet, View, TouchableOpacity, Text, Switch } from "react-native";
 import { inject, observer } from "mobx-react";
 import { NavigationParams, SafeAreaView } from "react-navigation";
 import FontAwesome5 from "react-native-vector-icons/FontAwesome5";
 import ImagePicker from "react-native-image-picker";
-import { Button, Picker, CreatePostImages } from "@components";
+import {
+  Button,
+  Picker,
+  CreatePostImages,
+  TextCard,
+  Colors
+} from "@components";
 import { ICreateStore } from "../../stores/CreateStore";
 
 export interface Props {
@@ -42,7 +39,7 @@ class CreateScreen extends React.Component<Props> {
           style={{ marginRight: 16 }}
           onPress={() => navigation.goBack()}
         >
-          <FontAwesome5 name={"times"} size={25} color={"black"} />
+          <FontAwesome5 name={"times"} size={25} color={Colors.black} />
         </TouchableOpacity>
       )
     };
@@ -148,21 +145,10 @@ class CreateScreen extends React.Component<Props> {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.content}>
-          <View style={styles.textareaView}>
-            <TextInput
-              onChangeText={this.onContentChangeHandler}
-              autoCompleteType={"off"}
-              value={createPost.content}
-              autoCorrect={false}
-              multiline
-              blurOnSubmit
-              returnKeyType="done"
-              allowFontScaling
-              maxLength={100}
-              style={[styles.textareaInput, { fontSize }]}
-              placeholder="Enter your text here"
-            />
-          </View>
+          <TextCard
+            value={createPost.content}
+            onChangeText={this.onContentChangeHandler}
+          />
 
           <View style={styles.imagesContainer}>
             <CreatePostImages
@@ -171,7 +157,7 @@ class CreateScreen extends React.Component<Props> {
             />
             <TouchableOpacity onPress={this.onImagePickerOpen}>
               <View style={styles.imageView}>
-                <FontAwesome5 name={"plus"} size={25} color={"lightgray"} />
+                <FontAwesome5 name={"plus"} size={25} color={Colors.gray} />
               </View>
             </TouchableOpacity>
           </View>
@@ -181,15 +167,15 @@ class CreateScreen extends React.Component<Props> {
           <View style={styles.commentEnabled}>
             <Text style={{ marginRight: 15 }}>Comments Enabled</Text>
             <Switch
-              ios_backgroundColor="#FFFFFF"
-              trackColor={{ false: "#E5E5E5", true: "#41CBEA" }}
+              ios_backgroundColor={Colors.white}
+              trackColor={{ false: Colors.gray, true: Colors.primary }}
               onValueChange={this.onCommentsHandler}
               value={createPost.isCommentsEnabled}
             />
           </View>
         </View>
         <Button
-          colors={isPublishDisabled && ["#8F9BB3", "#8F9BB3"]}
+          colors={isPublishDisabled && [Colors.gray, Colors.gray]}
           text="PUBLISH"
           disabled={isPublishDisabled}
           onPress={this.onSubmitHandler}
@@ -206,35 +192,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 24,
     flex: 1,
-    backgroundColor: "#F8FAFB"
+    backgroundColor: Colors.lightgray
   },
   content: {
     alignItems: "center",
     flex: 1,
     width: "100%"
-  },
-  textareaView: {
-    width: "100%",
-    fontSize: 16,
-    paddingHorizontal: 8,
-    paddingVertical: 6,
-    borderRadius: 10,
-    marginBottom: 22,
-    color: "black",
-    backgroundColor: "white",
-    shadowOpacity: 0.75,
-    shadowRadius: 7,
-    shadowColor: "rgba(0, 0, 0, .2)",
-    shadowOffset: { width: 2, height: 1 },
-    elevation: 2,
-    minHeight: 120,
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  textareaInput: {
-    fontSize: 18,
-    width: "100%",
-    textAlign: "center"
   },
   commentEnabled: {
     flexDirection: "row",
@@ -253,7 +216,7 @@ const styles = StyleSheet.create({
     width: 84,
     height: 84,
     borderWidth: 1,
-    borderColor: "lightgray",
+    borderColor: Colors.gray,
     borderRadius: 4,
     borderStyle: "dashed",
     alignItems: "center",

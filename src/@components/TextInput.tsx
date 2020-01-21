@@ -1,5 +1,6 @@
 import React, { forwardRef } from "react";
 import { View, StyleSheet, TextInput } from "react-native";
+import { Colors } from "@components";
 
 export interface Props {
   value: string;
@@ -20,7 +21,7 @@ const AppTextInput = forwardRef<any, Props>((props, ref) => {
         value={props.value}
         onChangeText={(value: string) => props.onChangeText(value)}
         onSubmitEditing={props.onSubmitEditing}
-        placeholderTextColor="#8F9BB3"
+        placeholderTextColor={Colors.gray}
         placeholder={props.placeholder}
         style={[
           styles.input,
@@ -45,15 +46,15 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: "transparent",
-    backgroundColor: "white",
+    borderColor: Colors.transparent,
+    backgroundColor: Colors.white,
     borderRadius: 50,
     paddingLeft: 40,
     paddingTop: 18,
     paddingBottom: 18,
     shadowOpacity: 0.75,
     shadowRadius: 5,
-    shadowColor: "rgba(0, 0, 0, 0.2)",
+    shadowColor: Colors.black02,
     shadowOffset: { width: 0, height: 2 },
     elevation: 2
   },
